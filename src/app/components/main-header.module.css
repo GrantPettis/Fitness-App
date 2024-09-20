@@ -23,7 +23,7 @@
 
 .nav a {
   text-decoration: none;
-  color: #6c87da;
+  color: #303f6e;
   font-weight: bold;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -31,15 +31,15 @@
 
 .nav a:hover,
 .nav a:active {
-  background: linear-gradient(90deg, #0105e9, #3868f7);
+  background: linear-gradient(90deg, #0105e9, #0105e9);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 18px rgba(248, 190, 42, 0.8);
+
 }
 
 .active {
-  background: linear-gradient(90deg,  #0105e9, #3868f7);
+  background: linear-gradient(90deg,  #0105e9, #0105e9);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

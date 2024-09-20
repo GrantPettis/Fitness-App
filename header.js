@@ -1,11 +1,15 @@
 import Link from 'next/link';
 import logoImg from '@/app/assets/Logo.PNG'
 import classes from '@/app/components/main-header.module.css'
+import Image from 'next/image';
+import MainHeaderBackground from '@/app/components/main-header-background';
 export default function Header(){
     return (
+        <>
+        <MainHeaderBackground/>
         <header className={classes.header}>
             <Link className={classes.logo} href = "/">
-            <img src={logoImg.src} alt='UBM logo'/>
+            <Image src={logoImg} alt='UBM logo' priority/>
             </Link>
 
             <nav className={classes.nav}>
@@ -25,5 +29,6 @@ export default function Header(){
                 </ul>
             </nav>
         </header>
+        </>
     );
 }
