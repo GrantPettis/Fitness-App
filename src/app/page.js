@@ -13,7 +13,6 @@ export default function Home() {
           height={38}
           priority
         />
-        <p><Link href='/sign_in'>sign_in</Link></p>
         <ol>
           <li>
             Get started by editing <code>src/app/page.js</code>.
