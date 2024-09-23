@@ -1,38 +1,51 @@
-"use client";
+"use client";  // Ensures this is a Client Component
 
 import { useState } from 'react';
-import Link from 'next/link';  // Import the Link component for navigation
 
-export default function SignInPage() {
+export default function SignUpPage() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const signInData = { email, password };
+    // Collect the form data
+    const signUpData = { name, email, password };
 
-    const response = await fetch('/api/signin', {
+    // Send POST request to the API endpoint for sign-up
+    const response = await fetch('/api/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(signInData),
+      body: JSON.stringify(signUpData),
     });
 
     const result = await response.json();
 
     if (response.ok) {
-      console.log('Sign-in successful:', result);
+      console.log('Sign-up successful:', result);
+      // You can redirect the user or show a success message here
     } else {
-      console.error('Sign-in failed:', result);
+      console.error('Sign-up failed:', result);
+      // Handle errors, like showing a message to the user
     }
   };
 
   return (
-    <div className="sign-in-container">
-      <h1>Sign In</h1>
+    <div className="sign-up-container">
+      <h1>Sign Up</h1>
       <form onSubmit={handleSubmit}>
+        <div>
+          <label>Name:</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
         <div>
           <label>Email:</label>
           <input
@@ -51,13 +64,8 @@ export default function SignInPage() {
             required
           />
         </div>
-        <button type="submit">Sign In</button>
+        <button type="submit">Sign Up</button>
       </form>
-
-      <p>
-        Don’t have an account?{' '}
-        <Link href="/signup">Sign Up</Link>  {/* Link to the Sign-Up page */}
-      </p>
     </div>
   );
 }
