@@ -1,4 +1,4 @@
-"use client"; // Add this line to declare the component as a Client Component
+"use client";  // Add this lin to ensure the component is treated as a client component
 
 import { useState } from 'react';
 
@@ -9,10 +9,10 @@ export default function SignInPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Create the sign-in data object
+    // Collect form data
     const signInData = { email, password };
 
-    // Send the POST request to the backend API (adjust the URL as needed)
+    // Send POST request to the API
     const response = await fetch('/api/signin', {
       method: 'POST',
       headers: {
@@ -21,14 +21,14 @@ export default function SignInPage() {
       body: JSON.stringify(signInData),
     });
 
+    // Parse the response as JSON
     const result = await response.json();
 
+    // Log the result in the browser console
     if (response.ok) {
       console.log('Sign-in successful:', result);
-      // Redirect to a dashboard or show a success message
     } else {
       console.error('Sign-in failed:', result);
-      // Handle errors (e.g., display error message)
     }
   };
 
