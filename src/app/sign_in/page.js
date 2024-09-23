@@ -1,6 +1,7 @@
-"use client";  // Make this a Client Component
+"use client";
 
 import { useState } from 'react';
+import Link from 'next/link';  // Import the Link component for navigation
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
@@ -11,7 +12,6 @@ export default function SignInPage() {
 
     const signInData = { email, password };
 
-    // Send POST request to the backend API for sign-in
     const response = await fetch('/api/signin', {
       method: 'POST',
       headers: {
@@ -54,7 +54,10 @@ export default function SignInPage() {
         <button type="submit">Sign In</button>
       </form>
 
-      <p>Don’t have an account? <a href="/signup">Sign Up</a></p>
+      <p>
+        Don’t have an account?{' '}
+        <Link href="/signup">Sign Up</Link>  {/* Link to the Sign-Up page */}
+      </p>
     </div>
   );
 }

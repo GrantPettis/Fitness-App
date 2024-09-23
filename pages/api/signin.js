@@ -3,7 +3,7 @@ export default function handler(req, res) {
   if (req.method === 'POST') {
     const { email, password } = req.body;
 
-    // Simulate authentication (replace with actual databas check)
+    // Simple authentication logic (replace this with real authentication logic)
     if (email === 'test@example.com' && password === 'password123') {
       res.status(200).json({ message: 'Sign-in successful' });
     } else {

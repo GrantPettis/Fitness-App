@@ -1,15 +1,15 @@
-// pages/api/signup.js
 export default function handler(req, res) {
   if (req.method === 'POST') {
     const { name, email, password } = req.body;
 
-    // Simple validation
+    // Validate the sign-up data (add more validation if needed)
     if (!name || !email || !password) {
       res.status(400).json({ message: 'All fields are required' });
       return;
     }
 
-    // Simulate user registration (replace with real database logic)
+    // Simulate user registration (replace this with actual database logic)
+    // You could hash the password here and store the user details in the database
     if (email === 'existing@example.com') {
       res.status(409).json({ message: 'Email is already registered' });
     } else {
