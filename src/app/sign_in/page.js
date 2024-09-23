@@ -1,6 +1,7 @@
 "use client";  // Add this lin to ensure the component is treated as a client component
 
 import { useState } from 'react';
+import {classes} from '@/app/sign_in/Sign_in_page.module.css';
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
@@ -34,15 +35,18 @@ export default function SignInPage() {
 
   return (
     <div className="sign-in-container">
-      <h1>Sign In</h1>
+      <h1 className= {classes}>Sign In 
+      </h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email:</label>
+          <label>Email:
+          </label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            color
           />
         </div>
         <div>
