@@ -1,7 +1,7 @@
-"use client";  // Add this lin to ensure the component is treated as a client component
+"use client";
 
 import { useState } from 'react';
-import {classes} from '@/app/sign_in/Sign_in_page.module.css';
+import Link from 'next/link';  // Import the Link component for navigation
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
@@ -10,10 +10,8 @@ export default function SignInPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Collect form data
     const signInData = { email, password };
 
-    // Send POST request to the API
     const response = await fetch('/api/signin', {
       method: 'POST',
       headers: {
@@ -22,10 +20,8 @@ export default function SignInPage() {
       body: JSON.stringify(signInData),
     });
 
-    // Parse the response as JSON
     const result = await response.json();
 
-    // Log the result in the browser console
     if (response.ok) {
       console.log('Sign-in successful:', result);
     } else {
@@ -60,6 +56,11 @@ export default function SignInPage() {
         </div>
         <button type="submit">Sign In</button>
       </form>
+
+      <p>
+        Don’t have an account?{' '}
+        <Link href="/signup">Sign Up</Link>  {/* Link to the Sign-Up page */}
+      </p>
     </div>
   );
 }
