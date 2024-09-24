@@ -59,7 +59,7 @@ export default function SignInPage() {
 
       <p>
         Don’t have an account?{' '}
-        <Link href="/signup">Sign Up</Link>  {/* Link to the Sign-Up page */}
+        <Link href="/sign_up">Sign Up</Link>  {/* Link to the Sign-Up page */}
       </p>
     </div>
   );
