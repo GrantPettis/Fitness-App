@@ -29,7 +29,7 @@
   border-radius: 0.5rem;
 }
 
-.nav a:hover,
+.nav a:hover, /* upper backgorund colors*/
 .nav a:active {
   background: linear-gradient(90deg, #0105e9, #0105e9);
   background-clip: text;

@@ -31,7 +31,7 @@ export default function SignInPage() {
 
   return (
     <div className="sign-in-container">
-      <h1 className= {classes}>Sign In 
+      <h1>Sign In 
       </h1>
       <form onSubmit={handleSubmit}>
         <div>

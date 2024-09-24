@@ -8,9 +8,9 @@ html {
   font-family: 'Quicksand', sans-serif;
 }
 
-body {
+body { /* Background color */
   margin: 0;
-  background: radial-gradient(#282c34, #282c34);
+  background: radial-gradient(#8b909a, #8b909a);
 }
 
 
