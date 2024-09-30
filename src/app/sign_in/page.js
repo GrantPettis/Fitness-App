@@ -30,8 +30,9 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="sign-in-container">
-      <h1>Sign In 
+    <div className="sign-in-container">n
+      <h1>
+        Sign In 
       </h1>
       <form onSubmit={handleSubmit}>
         <div>
@@ -42,7 +43,6 @@ export default function SignInPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            color
           />
         </div>
         <div>
