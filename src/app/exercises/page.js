@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react';
 
 
 async function fetchdatafromFirestore() {
-    const QuesrySnapshot = await getDocs(collection(db,"Exercises"))
+    const QuerySnapshot = await getDocs(collection(db,"Exercises"))
 
     const data = [];
-    QuerySnapshot.array.forEach(doc => {
+    QuerySnapshot.forEach(doc => {
         data.push({id: doc.id, ...doc.data()});
     });
     return data;
