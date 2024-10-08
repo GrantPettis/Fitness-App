@@ -18,7 +18,10 @@ export default function Header(){
                     <Link href= "/exercises"> Browse Exercises </Link>
                     </li>
                     <li>
-                    <Link href= "/progress_tracking"> Track your Progress </Link>
+                    <Link href= "/progress_tracking"> Track Your Progress </Link>
+                    </li>
+                    <li>
+                    <Link href= "/workout_plan"> Workout Plan </Link>
                     </li>
                     <li>
                     <Link href= "/contact"> Contact Us </Link>
