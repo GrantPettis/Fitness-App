@@ -1,23 +1,19 @@
 // Import the functions you need from the Firebase SDKs
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-
-// Firebase configuration, using environment variables from `.env.local`
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  apiKey: "AIzaSyDCuQO0w9365S224076cEr9eUEBjga4fTs",
+  authDomain: "universal-body-and-mind.firebaseapp.com",
+  projectId: "universal-body-and-mind",
+  storageBucket: "universal-body-and-mind.appspot.com",
+  messagingSenderId: "239984847318",
+  appId: "1:239984847318:web:25aeeb1ef882443b8c5c77",
+  measurementId: "G-1SNLP33M87"
 };
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 // Initialize Firestore (this is where you will store data like exercises)
 const db = getFirestore(app);
-
-// Export Firestore to use in other parts of the app
+// You can export `db` so you can use it in other parts of your app
 export { db };
