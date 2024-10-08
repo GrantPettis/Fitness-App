@@ -25,6 +25,7 @@ export default function exercises_page(){
         async function fetchData() {
             const data = await fetchdatafromFirestore();
             setData(data);
+            console.log('Fetched Data:', data); // Log the fetched data here
             
         }
         fetchData();
