@@ -4,6 +4,9 @@ import Link from 'next/link';
 import {useCollection} from "react-firebase-hooks/firestore"
 import {db} from '@/app/firebase/firebase'; 
 import { useEffect, useState } from 'react';
+import classes from '@/app/components/exercise-template.module.css'
+
+
 
 
 async function fetchdatafromFirestore() {
@@ -30,8 +33,8 @@ export default function exercises_page(){
         <h1>exercises_page</h1> 
         <div>
             {data.map((Exercise)=> (
-                <div key={Exercise.id} className='mb-4'>
-                    <p>{Exercise.name}</p>
+                <div key={Exercise.id} className={classes.button}>
+                    <Link href = {'/exercises/${}'} className = {classes.button}>{Exercise.name}</Link>
                     </div>
             ))} 
         </div>
