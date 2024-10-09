@@ -5,6 +5,8 @@ import { db } from '@/app/firebase/firebase';
 import { useEffect, useState } from 'react';
 import classes from '@/app/components/exercise-template.module.css';
 
+const ITEMS_PER_PAGE = 50; // Number of exercises per page
+
 // Fetch exercises from Firestore
 async function fetchdatafromFirestore() {
     const querySnapshot = await getDocs(collection(db,"Exercises"));
@@ -20,6 +22,7 @@ export default function ExercisesPage() {
     const [data, setData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [filter, setFilter] = useState({ muscleGroup: '', searchTerm: '' });
+    const [currentPage, setCurrentPage] = useState(1); // Track the current page
 
     // Fetch exercises from Firestore when the component mounts
     useEffect(() => {
@@ -37,17 +40,28 @@ export default function ExercisesPage() {
             const matchesMuscleGroup = filter.muscleGroup
                 ? exercise.primaryMuscle === filter.muscleGroup
                 : true;
-                const matchesSearchTerm = filter.searchTerm
+            const matchesSearchTerm = filter.searchTerm
                 ? exercise.name && exercise.name.toLowerCase().includes(filter.searchTerm.toLowerCase())
                 : true;            
             return matchesMuscleGroup && matchesSearchTerm;
         });
-        
+
         console.log('Re-applied Filter:', filter); // Log the current filter state
         console.log('Filtered Exercises:', filtered); // Log the filtered exercises
 
         setFilteredData(filtered);
+        setCurrentPage(1); // Reset to page 1 when filters are applied
     }, [filter, data]); // Depend on `filter` and `data` to re-apply filtering when either changes
+
+    // Pagination logic
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const currentExercises = filteredData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+
+    // Handle page change
+    const goToPage = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
     // Handle filter changes
     const handleFilterChange = (e) => {
@@ -105,10 +119,10 @@ export default function ExercisesPage() {
                 </label>
             </div>
 
-            {/* Display the filtered exercises */}
+            {/* Display the current exercises */}
             <div>
-                {filteredData.length > 0 ? (
-                    filteredData.map((Exercise) => (
+                {currentExercises.length > 0 ? (
+                    currentExercises.map((Exercise) => (
                         <div key={Exercise.id} className={classes.button}>
                             <Link href={`/exercises/${Exercise.id}`} className={classes.button}>
                                 {Exercise.name}
@@ -118,6 +132,19 @@ export default function ExercisesPage() {
                 ) : (
                     <p>No exercises found.</p>
                 )}
+            </div>
+
+            {/* Pagination controls */}
+            <div className="pagination">
+                {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                        key={index}
+                        className={`page-button ${currentPage === index + 1 ? 'active' : ''}`}
+                        onClick={() => goToPage(index + 1)}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
             </div>
         </main>
     );

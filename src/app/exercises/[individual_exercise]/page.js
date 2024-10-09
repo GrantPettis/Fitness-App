@@ -1,7 +1,10 @@
-"use client";
+"use client"; 
 import { doc, getDoc } from 'firebase/firestore'; // Firestore functions
 import { db } from '@/app/firebase/firebase'; // Firestore instance
 import { useState, useEffect } from 'react';
+
+
+
 
 // Fetch exercise data based on slug (document ID)
 async function getExercise(slug) {
@@ -11,12 +14,23 @@ async function getExercise(slug) {
     }
 
     try {
+        // Check if exercise data is already cached in session storage
+        const cachedExercise = sessionStorage.getItem(slug);
+        if (cachedExercise) {
+            console.log(`Loaded exercise from cache: ${slug}`);
+            return JSON.parse(cachedExercise); // Return cached data
+        }
+
+        // If not cached, fetch from Firestore
         const docRef = doc(db, "Exercises", slug); // Fetch document based on the slug (document ID)
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
             console.log("Fetched Exercise Data: ", docSnap.data()); // Log fetched data
-            return { id: docSnap.id, ...docSnap.data() }; // Return the exercise data
+            const exerciseData = { id: docSnap.id, ...docSnap.data() };
+            // Cache the fetched exercise data
+            sessionStorage.setItem(slug, JSON.stringify(exerciseData));
+            return exerciseData; // Return the exercise data
         } else {
             console.log("No such document found for slug: ", slug); // Log if document isn't found
             return null;
@@ -38,7 +52,7 @@ export default function ExerciseDetailPage({ params }) {
             setLoading(false);
         }
 
-        fetchExercise();
+        fetchExercise(); // Fetch the exercise data
     }, [params.individual_exercise]);
 
     if (loading) {
