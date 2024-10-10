@@ -21,7 +21,7 @@ export default function Header(){
                     <Link href= "/progress_tracking"> Track Your Progress </Link>
                     </li>
                     <li>
-                    <Link href= "/workout_plan"> Workout Plan </Link>
+                    <Link href= "/workout_plan"> Workout Plans </Link>
                     </li>
                     <li>
                     <Link href= "/contact"> Contact Us </Link>
