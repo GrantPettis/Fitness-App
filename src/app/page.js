@@ -8,7 +8,7 @@ export default function Home() {
       <main className={styles.main}>
         <ol>
           <Image className = {styles.home}  src={logoImg} alt='UBM logo'></Image>
-          <p className={styles.page}>Change your life, One step at a time</p>
+          <p className={styles.page}>Change Your Life, One Step At A Time</p>
         </ol>
 
         <div className={styles.ctas}>
