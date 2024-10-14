@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { db } from '@/app/firebase/firebase'; 
 import { useEffect, useState } from 'react';
 import classes from '@/app/components/exercise-template.module.css';
+import grid from '@/app/components/exercise-grid.module.css'
+import style from '@/app/components/exercise-item.module.css'
 
 const ITEMS_PER_PAGE = 50; // Number of exercises per page
 
@@ -73,7 +75,7 @@ export default function ExercisesPage() {
     };
 
     return (
-        <main>
+        <main className={classes.main}>
             <h1>Exercises Page</h1>
 
             {/* Filter section */}
@@ -120,7 +122,7 @@ export default function ExercisesPage() {
             </div>
 
             {/* Display the current exercises */}
-            <div>
+            <div className={grid.exercises}>
                 {currentExercises.length > 0 ? (
                     currentExercises.map((Exercise) => (
                         <div key={Exercise.id} className={classes.button}>
