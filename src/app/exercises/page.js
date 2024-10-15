@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import classes from '@/app/components/exercise-template.module.css';
 import grid from '@/app/components/exercise-grid.module.css'
 import style from '@/app/components/exercise-item.module.css'
+import { resolve } from 'styled-jsx/css';
 
 const ITEMS_PER_PAGE = 50; // Number of exercises per page
 
