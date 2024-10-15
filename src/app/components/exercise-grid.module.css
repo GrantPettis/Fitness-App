@@ -3,7 +3,7 @@
     max-width: 180rem;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    grid-gap: 5rem;
+    grid-gap: 2rem;
     margin: 2rem auto;
     list-style: none;
     padding: 0;
