@@ -2,6 +2,7 @@
 import { doc, getDoc } from 'firebase/firestore'; // Firestore functions
 import { db } from '@/app/firebase/firebase'; // Firestore instance
 import { useState, useEffect } from 'react';
+import classes from '@/app/exercises/[individual_exercise]/page.module.css'
 
 
 
@@ -64,12 +65,25 @@ export default function ExerciseDetailPage({ params }) {
     }
 
     return (
+        <>
+        <header className={classes.header}>
+            <div className={classes.headerText}> 
+               <h1>{exercise.name} </h1> 
+                </div>
+        </header>
         <main>
-            <h1>{exercise.name}</h1>
-            <p>Sets: {exercise.sets}</p>
-            <p>Reps: {exercise.reps}</p>
-            <p>Primary Muscle: {exercise.primaryMuscle}</p>
-            <p>Adaptation: {exercise.adaptation}</p> {/* Changed adaptationType to adaptation */}
+            <div className={classes.info}>
+                <p>Sets: {exercise.sets}</p>
+            </div>
+            <div className={classes.info}>
+                <p>Reps: {exercise.reps}</p>
+            </div>
+            <div className={classes.info}>
+                <p>Primary Muscle: {exercise.primaryMuscle}</p>
+            </div>
+            <div className={classes.info}>
+                <p>Adaptation: {exercise.adaptation}</p> {/* Changed adaptationType to adaptation */}
+            </div>
             {exercise.videoURL ? (
                 <a href={exercise.videoURL} target="_blank" rel="noopener noreferrer">
                     Click Here
@@ -78,5 +92,6 @@ export default function ExerciseDetailPage({ params }) {
                 <p>No video available</p>
             )}
         </main>
+        </>
     );
 }
