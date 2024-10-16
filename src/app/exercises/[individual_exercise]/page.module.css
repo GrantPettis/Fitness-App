@@ -41,11 +41,22 @@
   }
 
   .info {
-    padding: 0.5rem 1rem 0 1rem;
-    font-size: 2rem;
+    padding: 0.2rem .2rem  .1rem;
+    text-align: center;
+    font-size: 1.8rem;
     color: #ddd6cb;
     max-width: 40rem;
     animation: fade-slide-in-from-right 1s ease-out forwards;
+  }
+  .infogrid {
+    width: 90%;
+    max-width: 180rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    grid-gap: .5rem;
+    margin: 2rem auto;
+    list-style: none;
+    padding: 0;
   }
 
   
@@ -61,6 +72,7 @@
     margin: 2rem auto;
     animation: fade-slide-in-from-bottom 1s ease-out forwards;
   }
+  
   
   .loading {
     font-size: 3rem;

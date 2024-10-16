@@ -3,6 +3,7 @@ import { doc, getDoc } from 'firebase/firestore'; // Firestore functions
 import { db } from '@/app/firebase/firebase'; // Firestore instance
 import { useState, useEffect } from 'react';
 import classes from '@/app/exercises/[individual_exercise]/page.module.css'
+//import grid from '@/app/components/exercise-grid.module.css'
 
 
 
@@ -71,26 +72,47 @@ export default function ExerciseDetailPage({ params }) {
                <h1>{exercise.name} </h1> 
                 </div>
         </header>
-        <main>
+        <main className={classes.infogrid}>
             <div className={classes.info}>
-                <p>Sets: {exercise.sets}</p>
+                <p>Sets</p>
+            </div>
+
+            <div className={classes.info}>
+                <p>Reps</p>
             </div>
             <div className={classes.info}>
-                <p>Reps: {exercise.reps}</p>
+                <p>Primary Muscle</p>
             </div>
             <div className={classes.info}>
-                <p>Primary Muscle: {exercise.primaryMuscle}</p>
+                <p>Adaptation</p>
             </div>
             <div className={classes.info}>
-                <p>Adaptation: {exercise.adaptation}</p> {/* Changed adaptationType to adaptation */}
+                <p>Video Instruction</p>
+            </div>
+            <div className={classes.info}>
+                <p> {exercise.sets}</p>
+            </div>
+            <div className={classes.info}>
+                <p>{exercise.reps}</p>
+            </div>
+            <div className={classes.info}>
+                <p>{exercise.primaryMuscle}</p>
+            </div>
+            <div className={classes.info}>
+                <p>{exercise.adaptation}</p>
             </div>
             {exercise.videoURL ? (
-                <a href={exercise.videoURL} target="_blank" rel="noopener noreferrer">
-                    Click Here
-                </a>
+                <div className={classes.info}><a href={exercise.videoURL} target="_blank" rel="noopener noreferrer">
+                Click Here
+            </a>
+            </div>
+
             ) : (
+                <div className={classes.info}>
                 <p>No video available</p>
+                </div>
             )}
+        
         </main>
         </>
     );
