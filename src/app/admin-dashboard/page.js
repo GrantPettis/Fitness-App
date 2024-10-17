@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase/firebase'; 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';  // Import Link from Next.js
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -86,6 +87,11 @@ export default function AdminDashboard() {
       <h1>Admin Dashboard</h1>
       <p>Welcome, {user.email}</p>
       {feedback && <p>{feedback}</p>} 
+
+      {/* Link to Assign Workout Plans page */}
+      <Link href="/AssignWorkoutPlan">
+        Assign Workout Plans
+      </Link>
 
       <h2>Registered Users</h2>
       {users.length > 0 ? (

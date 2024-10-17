@@ -1,8 +1,8 @@
 const admin = require('firebase-admin');
 
-// Initialize Firebase Admin SDK
+// Initialize Firebase Admin SDK with your service account key
 admin.initializeApp({
-  credential: admin.credential.applicationDefault(),  // Use your service account key file
+  credential: admin.credential.cert(require('./path-to-your-serviceAccountKey.json')),  // Replace with your service account key file path
 });
 
 // List of UIDs to set as admin
@@ -17,7 +17,7 @@ const adminUids = [
 async function setAdminClaims() {
   for (const uid of adminUids) {
     try {
-      await admin.auth().setCustomUserClaims(uid, { isAdmin: true });
+      await admin.auth().setCustomUserClaims(uid, { admin: true });  // Use `admin: true` to set the admin claim
       console.log(`User ${uid} has been set as admin.`);
     } catch (error) {
       console.error(`Error setting custom claims for ${uid}:`, error);
