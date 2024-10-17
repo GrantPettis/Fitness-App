@@ -5,9 +5,8 @@ import styles from "./page.module.css";
 import Link from 'next/link';
 import logoImg from '@/app/assets/Logo.PNG';
 import { useEffect, useState } from 'react';
-import { onAuthStateChanged, getAuth } from 'firebase/auth';  // Firebase Auth methods
-import { auth, db } from './firebase/firebase';  // Correct path to Firebase initialization
-import { setDoc, doc, getDoc } from 'firebase/firestore';  // Firestore methods
+import { onAuthStateChanged, getAuth } from 'firebase/auth';  // No signOut import needed now
+import { auth } from './firebase/firebase';  // Correct path to firebase.js
 
 export default function Home() {
   const [user, setUser] = useState(null); // State to store user info
@@ -18,24 +17,11 @@ export default function Home() {
     const auth = getAuth();
 
     // Listen for changes in the authentication state
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // If user is signed in, set user data
         setUser(user);
         
-        // Check if user exists in Firestore users collection
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
-
-        if (!userSnap.exists()) {
-          // Add the user to Firestore if they don't exist
-          await setDoc(userRef, {
-            email: user.email,
-            role: "User",  // Default role
-          });
-          console.log("New user added to Firestore:", user.email);
-        }
-
         // Check if user has admin claims
         user.getIdTokenResult().then(idTokenResult => {
           if (idTokenResult.claims.admin) {
@@ -73,12 +59,8 @@ export default function Home() {
         </ol>
 
         <div className={styles.ctas}>
-          {!loading && !user && (
-            <>
-              {/* If no user is signed in, display a sign-in button */}
-              <Link href="/sign_in">Sign In</Link>
-            </>
-          )}
+          {/* Remove the sign-in button from the main page */}
+          {/* The button for signing in is not displayed anymore */}
         </div>
       </main>
 

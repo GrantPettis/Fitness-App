@@ -5,13 +5,13 @@ import { getAuth } from "firebase/auth";  // Import Firebase Authentication
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDCuQO0w9365S224076cEr9eUEBjga4fTs",
-  authDomain: "universal-body-and-mind.firebaseapp.com",
-  projectId: "universal-body-and-mind",
-  storageBucket: "universal-body-and-mind.appspot.com",
-  messagingSenderId: "239984847318",
-  appId: "1:239984847318:web:25aeeb1ef882443b8c5c77",
-  measurementId: "G-1SNLP33M87"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase

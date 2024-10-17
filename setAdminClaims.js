@@ -5,15 +5,26 @@ admin.initializeApp({
   credential: admin.credential.applicationDefault(),  // Use your service account key file
 });
 
-// Set the custom claim 'isAdmin' to true for a specific user by their UID
-const uid = 'your-admin-user-uid';  // Replace with your actual user UID
+// List of UIDs to set as admin
+const adminUids = [
+  '4rnskQyaQ0YTicwoUx2N93FP5223',
+  'TMjeYIm9vuWO7pF7H0S4tWygzSp1',
+  'TWhudUEo6gOuUfTgGn2Z83PnhQs2',
+  'Hwv2s46BvYPZVN0mulL4STPIxzh1'
+];
 
-admin.auth().setCustomUserClaims(uid, { isAdmin: true })
-  .then(() => {
-    console.log('Custom claims set for admin user');
-    process.exit();  // Exit script after completion
-  })
-  .catch(error => {
-    console.error('Error setting custom claims:', error);
-    process.exit(1);
-  });
+// Function to set custom claims for each UID
+async function setAdminClaims() {
+  for (const uid of adminUids) {
+    try {
+      await admin.auth().setCustomUserClaims(uid, { isAdmin: true });
+      console.log(`User ${uid} has been set as admin.`);
+    } catch (error) {
+      console.error(`Error setting custom claims for ${uid}:`, error);
+    }
+  }
+  process.exit();  // Exit script after completion
+}
+
+// Call the function
+setAdminClaims();

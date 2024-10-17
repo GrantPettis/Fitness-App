@@ -38,3 +38,4 @@ next-env.d.ts
 #firebase admin private key
 /config/firebase-admin-key.json
 scripts/universal-body-and-mind-firebase-adminsdk-rysjb-efdebed97a.json
+serviceAccountKey.json
