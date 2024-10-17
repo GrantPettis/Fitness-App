@@ -1,6 +1,9 @@
-"use client";  // Ensure the component is treated as a Client Component
+"use client";  // Ensure it's a Client Component
 
 import { useState } from 'react';
+import { auth, db } from '../firebase/firebase';  // Import Firebase auth and Firestore instance
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';  // Firestore functions
 
 export default function SignUpPage() {
   const [name, setName] = useState('');
@@ -10,28 +13,32 @@ export default function SignUpPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Collect form data
-    const signUpData = { name, email, password };
+    try {
+      // Create the user with Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-    // Send POST request to the API
-    const response = await fetch('/api/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(signUpData),
-    });
+      // Update the user's profile to include their name
+      await updateProfile(user, {
+        displayName: name,
+      });
 
-    // Parse the response as JSON
-    const result = await response.json();
+      console.log('Sign-up successful:', user);
 
-    // Log the result in the browser console
-    if (response.ok) {
-      console.log('Sign-up successful:', result);
-      // Optionally redirect to a dashboard or login page
-    } else {
-      console.error('Sign-up failed:', result);
-      // Handle errors (e.g., display error message)
+      // Add the user to Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        name: name,
+        role: "User"  // Default role as "User"
+      });
+
+      console.log('User added to Firestore:', user.uid);
+
+      // Redirect to the homepage after successful sign-up
+      window.location.href = '/';  // Redirect to the homepage
+    } catch (error) {
+      console.error('Error during sign-up:', error);
+      alert('An error occurred. Please try again.');
     }
   };
 

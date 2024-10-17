@@ -1,43 +1,55 @@
-"use client";
+"use client";  // Ensure it's a Client Component
 
 import { useState } from 'react';
-import Link from 'next/link';  // Import the Link component for navigation
+import { signInWithEmailAndPassword, getIdTokenResult, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import Link from 'next/link';  // Import Link from Next.js for navigation
+import { useRouter } from 'next/navigation';
+import { auth } from '../firebase/firebase';  // Import the initialized auth from firebase.js
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const signInData = { email, password };
+    try {
+      // Set the authentication persistence to local so users stay logged in across sessions
+      await setPersistence(auth, browserLocalPersistence);
 
-    const response = await fetch('/api/signin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(signInData),
-    });
+      // Sign in the user with Firebase Authentication
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-    const result = await response.json();
+      console.log('Sign-in successful:', user);
 
-    if (response.ok) {
-      console.log('Sign-in successful:', result);
-    } else {
-      console.error('Sign-in failed:', result);
+      // Force a token refresh to get the latest claims
+      const idTokenResult = await getIdTokenResult(user, true);
+      console.log('idTokenResult.claims:', idTokenResult.claims);  // Log the claims for debugging
+
+      // Corrected claim check
+      if (idTokenResult.claims.admin) {
+        console.log('User is an admin');
+        router.push('/admin-dashboard');  // Redirect to admin dashboard if user is an admin
+      } else {
+        console.log('User is not an admin');
+        router.push('/user-dashboard');  // Redirect to user dashboard if user is not an admin
+      }
+
+    } catch (error) {
+      console.error('Error during sign-in:', error);
+      // Provide a more specific error message to the user
+      alert('Sign-in failed. Please check your credentials and try again.');
     }
   };
 
   return (
-    <div className="sign-in-container">n
-      <h1>
-        Sign In 
-      </h1>
+    <div className="sign-in-container">
+      <h1>Sign In</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Email:
-          </label>
+          <label>Email:</label>
           <input
             type="email"
             value={email}
