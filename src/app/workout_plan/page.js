@@ -8,12 +8,15 @@ import { collection, getDocs } from 'firebase/firestore'; // Firebase Firestore 
 export default function WorkoutPlanPage() {
   const [workoutPlans, setWorkoutPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState('');
+  const [error, setError] = useState('');  // New state for error messages
+  const [loading, setLoading] = useState(true);  // Loading state for better UX
   const router = useRouter();
 
   // Fetch predefined workout plans from Firebase on page load
   useEffect(() => {
     const fetchPlans = async () => {
       try {
+        setLoading(true);  // Start loading
         const plansSnapshot = await getDocs(collection(db, 'workoutPlans'));
         const plans = plansSnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -21,10 +24,14 @@ export default function WorkoutPlanPage() {
         }));
 
         setWorkoutPlans(plans); // Set the fetched plans
+        setError('');  // Clear any previous error
         console.log('Fetched Plans: ', plans); // Debug: log fetched plans
       } catch (error) {
         console.error('Error fetching workout plans: ', error); // Error handling
-      }
+        setError('Failed to load workout plans. Please try again later.');  // Set a user-friendly error message
+      } finally {
+        setLoading(false);  // Stop loading regardless of success or failure
+        }
     };
     fetchPlans();
   }, []);
@@ -39,7 +46,7 @@ export default function WorkoutPlanPage() {
       router.push(`/workout-plans/${selectedSlug}`); // Navigate using the slug
     }
   };
-
+  
   return (
     <div>
       <h1>Workout Plan Page</h1>
@@ -51,6 +58,12 @@ export default function WorkoutPlanPage() {
       >
         Create Workout Plan
       </button>
+
+      {/* Display loading message */}
+      {loading && <p>Loading workout plans...</p>}
+
+      {/* Display error message if something went wrong */}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {/* Dropdown filter for workout plans fetched from Firebase */}
       <div>
