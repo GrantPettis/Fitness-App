@@ -65,6 +65,9 @@ export default function WorkoutPlanPage() {
       {/* Display error message if something went wrong */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
+      {/* Display no plans available message if workout plans are empty */}
+      {!loading && !error && workoutPlans.length === 0 && <p>No workout plans available at the moment.</p>}
+
       {/* Dropdown filter for workout plans fetched from Firebase */}
       <div>
         <label htmlFor="workout-plan-select">Choose a workout plan:</label>
