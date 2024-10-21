@@ -7,7 +7,7 @@ import classes from '@/app/components/exercise-template.module.css';
 import grid from '@/app/components/exercise-grid.module.css'
 import style from '@/app/components/exercise-item.module.css'
 import { resolve } from 'styled-jsx/css';
-
+import dropdown from '@/app/components/input-field.module.css'
 const ITEMS_PER_PAGE = 50; // Number of exercises per page
 
 // Fetch exercises from Firestore
@@ -76,12 +76,13 @@ export default function ExercisesPage() {
     };
 
     return (
+        <>
+        <header className={style.headerText}>
+            <h1>Exercises</h1>
+        </header>
         <main className={classes.main}>
-            <h1>Exercises Page</h1>
-
             {/* Filter section */}
-            <div className="filter-section">
-                <label>
+            <div style={{padding: '8px'}}>
                     Search by Name:
                     <input
                         type="text"
@@ -90,15 +91,14 @@ export default function ExercisesPage() {
                         onChange={handleFilterChange}
                         placeholder="Search exercises..."
                     />
-                </label>
-
-                <label>
-                    Filter by Muscle Group:
+                <h1 className={dropdown.title} style={{ display: 'inline', padding: '2px' }}>Muscle Group:</h1>
                     <select
-                        name="muscleGroup"
-                        value={filter.muscleGroup}
-                        onChange={handleFilterChange}
-                    >
+                        className={dropdown.nav}
+                    name="muscleGroup"
+                    value={filter.muscleGroup}
+                    onChange={handleFilterChange}
+                    title='Muscle Group:'
+                        >
                         <option value="">All</option>
                         <option value="Adductors/Abductors">Adductors/Abductors</option>
                         <option value="Ankle">Ankle</option>
@@ -119,7 +119,6 @@ export default function ExercisesPage() {
                         <option value="Triceps">Triceps</option>
                         <option value="Upper Back">Upper Back</option>
                     </select>
-                </label>
             </div>
 
             {/* Display the current exercises */}
@@ -150,5 +149,6 @@ export default function ExercisesPage() {
                 ))}
             </div>
         </main>
+        </>
     );
 }

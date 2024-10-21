@@ -15,9 +15,18 @@
     padding: 0.5rem 1rem 0 1rem;
   }
   
+  .headerText h1 {
+    margin: 0;
+    font-size: 3.5rem;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    color: #ddd6cb;
+    text-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5);
+  }
   .headerText h2 {
     margin: 0;
     font-size: 1.5rem;
+    color: #ffffff;
     font-family: 'Montserrat', sans-serif;
   }
   
