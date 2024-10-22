@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { auth } from '@/app/firebase/firebase';  // Import Firebase auth instance
+import { auth } from '@/app/firebase/firebase'; // Import Firebase auth instance
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import logoImg from '@/app/assets/Logo.PNG';
@@ -12,13 +12,16 @@ import MainHeaderBackground from '@/app/components/main-header-background';
 
 export default function Header() {
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false); // State to check if the user is admin
   const router = useRouter();
 
   useEffect(() => {
     // Listen for changes in authentication state
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         setUser(user);  // User is signed in
+        const token = await user.getIdTokenResult(); // Await the token to check claims
+        setIsAdmin(token.claims.admin || false); // Set admin status based on claims
       } else {
         setUser(null);  // User is signed out
       }
@@ -38,13 +41,22 @@ export default function Header() {
     }
   };
 
+  // Function to handle logo click
+  const handleLogoClick = () => {
+    if (isAdmin) {
+      router.push('/admin-dashboard'); // Redirect to Admin Dashboard if admin
+    } else {
+      router.push('/user-dashboard'); // Redirect to User Dashboard if not admin
+    }
+  };
+
   return (
     <>
       <MainHeaderBackground />
       <header className={classes.header}>
-        <Link className={classes.logo} href="/">
+        <div className={classes.logo} onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
           <Image src={logoImg} alt='UBM logo' priority />
-        </Link>
+        </div>
 
         <nav className={classes.nav}>
           <ul>
