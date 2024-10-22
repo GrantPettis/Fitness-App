@@ -1,3 +1,4 @@
+"use client"
 // firebaseConfig.js
 //import { initializeApp } from "firebase/app";
 //import { getFirestore } from "firebase/firestore";
@@ -12,18 +13,12 @@ const firebaseConfig = {
     appId: "YOUR_APP_ID"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore
-const db = getFirestore(app);
-
-export { db };
 
 
 // pages/progress_tracking_page.js
-import React, { useState } from 'react';
-import { db } from '../firebaseConfig'; // Import Firestore
+import { db } from '@/app/firebase/firebase'; // Firestore instance
+import { useState, useEffect } from 'react';
 import { collection, addDoc } from 'firebase/firestore'; // Firestore functions
 
 export default function ProgressTrackingPage() {
