@@ -2,9 +2,9 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";  // Import Firebase Authentication
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";  // Add isSupported
 
-// Your web app's Firebase configuration (hard-coded)
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDCuQO0w9365S224076cEr9eUEBjga4fTs",
   authDomain: "universal-body-and-mind.firebaseapp.com",
@@ -24,8 +24,17 @@ const db = getFirestore(app);
 // Initialize Firebase Authentication
 const auth = getAuth(app);
 
-// Initialize Firebase Analytics (optional)
-const analytics = getAnalytics(app);
+// Initialize Firebase Analytics only if supported
+let analytics;
+isSupported().then(supported => {
+  if (supported) {
+    analytics = getAnalytics(app);
+  } else {
+    console.log("Firebase Analytics is not supported in this environment.");
+  }
+}).catch(error => {
+  console.error("Error checking if Firebase Analytics is supported:", error);
+});
 
-// Export both Firestore, Auth, and Analytics so you can use them elsewhere in your app
+// Export Firestore, Auth, and Analytics so you can use them elsewhere in your app
 export { db, auth, analytics };

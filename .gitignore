@@ -39,3 +39,13 @@ next-env.d.ts
 /config/firebase-admin-key.json
 scripts/universal-body-and-mind-firebase-adminsdk-rysjb-efdebed97a.json
 serviceAccountKey.json
+
+# Ignore the service account key
+/config/firebase-admin-key.json
+serviceAccountKey.json
+
+# Ignore environment variable files
+.env
+.env.local
+
+src/app/firebase/firebaseAdmin.js
