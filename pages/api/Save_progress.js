@@ -146,7 +146,6 @@ export default function ProgressTrackingPage() {
     );
 }
 
-// service cloud.firestore {
 //     match /databases/{database}/documents {
 //       match /exerciseProgress/{document} {
 //         allow read, write: if request.auth != null;
