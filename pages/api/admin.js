@@ -1,22 +1,19 @@
-// Import necessary functions from Firebase SDK
-import { db } from '../../src/app/firebase/firebase'; 
-import { collection, getDocs, updateDoc, doc, setDoc } from 'firebase/firestore';
-import { getAuth } from 'firebase-admin/auth';  // Import Firebase Admin Authentication
+// Import the Firebase Admin SDK
+import { db } from '../../src/app/firebase/firebaseAdmin';  // Use Admin SDK, not Client SDK
+import { getAuth } from 'firebase-admin/auth';  // Use Admin SDK auth
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { uid, role, userId, planId } = req.body; // Destructure uid, role, userId, and planId from the request body
+    const { uid, role, userId, planId } = req.body;
 
-    // Log the incoming request
     console.log("Received POST request:", { uid, role, userId, planId });
 
-    // Verify the user is an admin before proceeding with any role or plan update
     try {
-      const adminAuth = getAuth();  // Firebase Admin SDK to verify claims
+      const adminAuth = getAuth();  // Use Firebase Admin SDK for auth
       const userRecord = await adminAuth.getUser(uid);
 
+      // Verify admin status
       if (!userRecord.customClaims || userRecord.customClaims.admin !== true) {
-        // User is not an admin, deny the request
         return res.status(403).json({ error: 'Not authorized. Only admins can perform this action.' });
       }
     } catch (error) {
@@ -31,9 +28,9 @@ export default async function handler(req, res) {
       }
 
       try {
-        const userDoc = doc(db, "users", uid); // Reference to the user document in Firestore
-        await updateDoc(userDoc, { role }); // Update user's role
-        console.log(`User ${uid} updated to role ${role}.`); // Log the successful update
+        const userDoc = db.collection('users').doc(uid);  // Correct Admin SDK usage
+        await userDoc.update({ role });  // Use `update` instead of `updateDoc`
+        console.log(`User ${uid} updated to role ${role}.`);
         return res.status(200).json({ message: `User ${uid} updated to role ${role}.` });
       } catch (error) {
         console.error("Error updating user role:", error);
@@ -44,20 +41,28 @@ export default async function handler(req, res) {
     // Handle workout plan assignment
     if (userId && planId) {
       try {
-        const userWorkoutPlanRef = doc(db, "users", userId, "workoutPlans", planId); // Reference to the user's workoutPlans subcollection
-        const workoutPlanRef = doc(db, "workoutPlans", planId); // Reference to the workout plan in Firestore
+        const userWorkoutPlanRef = db.collection('users').doc(userId).collection('workoutPlans').doc(planId);  // Reference to user's workout plan
+        const workoutPlanRef = db.collection('workoutPlans').doc(planId);  // Reference to the workout plan
 
-        // Fetch the workout plan data
         const workoutPlanSnapshot = await workoutPlanRef.get();
-        if (!workoutPlanSnapshot.exists) {
+        if (!workoutPlanSnapshot.exists) {  // Check if the workout plan exists
           return res.status(404).json({ error: "Workout plan not found." });
         }
 
-        // Assign the workout plan to the user
-        await setDoc(userWorkoutPlanRef, {
-          ...workoutPlanSnapshot.data(),
-          assignedAt: new Date(),
-          assignedBy: uid, // Admin who assigned the workout plan
+        // Ensure 'name' field is used
+        const workoutData = workoutPlanSnapshot.data();
+
+        const existingPlan = await userWorkoutPlanRef.get();
+        if (existingPlan.exists) {  // Check if the workout plan is already assigned
+          return res.status(400).json({ error: "Workout plan already assigned to this user." });
+        }
+
+        // Assign workout plan
+        await userWorkoutPlanRef.set({
+          ...workoutData,
+          assignedAt: new Date(), // Store the date and time of assignment
+          assignedBy: uid, // Store the admin UID
+          planName: workoutData.name || "Unnamed Plan", // Use the 'name' field from the workout plan
         });
 
         console.log(`Workout plan ${planId} assigned to user ${userId}.`);
@@ -71,13 +76,13 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Invalid request. Provide either uid and role, or userId and planId." });
   } else if (req.method === 'GET') {
     try {
-      const usersCollection = collection(db, 'users'); 
-      const snapshot = await getDocs(usersCollection);
+      const usersCollection = db.collection('users');  // Correct Admin SDK usage
+      const snapshot = await usersCollection.get();
       const users = snapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
-      return res.status(200).json(users); 
+      return res.status(200).json(users);
     } catch (error) {
       console.error("Error fetching users:", error);
       return res.status(500).json({ error: "Failed to fetch users." });
