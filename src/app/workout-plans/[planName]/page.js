@@ -7,10 +7,10 @@ import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import style from '@/app/components/exercise-item.module.css'
 
-
 export default function WorkoutPlanDetails() {
   const { planName } = useParams();
   const [planDetails, setPlanDetails] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState(""); // For both day and category selection
   const router = useRouter(); // Initialize useRouter
 
   useEffect(() => {
@@ -36,11 +36,11 @@ export default function WorkoutPlanDetails() {
     return <p>Loading plan details...</p>;
   }
 
-  // Organize exercises based on the plan name
+  // Organize exercises based on the plan
   let organizedExercises = {};
 
   if (planName === '15-min-full-workouts') {
-    // Group by category
+    // Group by category (Upper Body, Lower Body, Full Body)
     organizedExercises = planDetails.exercises.reduce((acc, exercise) => {
       const { category } = exercise;
       if (!acc[category]) {
@@ -49,20 +49,10 @@ export default function WorkoutPlanDetails() {
       acc[category].push(exercise);
       return acc;
     }, {});
-  } else if (planName === 'building-speed-and-power-free-plan') {
-    // Group by day
+  } else {
+    // Group by day for other plans
     organizedExercises = planDetails.exercises.reduce((acc, exercise) => {
-      const { day } = exercise; // Assuming 'day' exists in your exercise data
-      if (!acc[day]) {
-        acc[day] = [];
-      }
-      acc[day].push(exercise);
-      return acc;
-    }, {});
-  } else if (planName === 'general-health-free-plan' || planName === 'no-equipment-free-plan') {
-    // Use as is for General Health and No Equipment Free Plans
-    organizedExercises = planDetails.exercises.reduce((acc, exercise) => {
-      const { day } = exercise; // Grouping by day for these plans
+      const { day } = exercise;
       if (!acc[day]) {
         acc[day] = [];
       }
@@ -71,54 +61,57 @@ export default function WorkoutPlanDetails() {
     }, {});
   }
 
-  // Ensure organizedExercises has keys
-  if (!organizedExercises || typeof organizedExercises !== 'object') {
-    return <p>No exercises found for this plan.</p>;
-  }
+  // Dropdown for selecting day or category
+  const handleFilterChange = (e) => {
+    setSelectedFilter(e.target.value);
+  };
+
+  // Filter exercises by selected day or category
+  const filteredExercises = selectedFilter ? organizedExercises[selectedFilter] : [];
 
   return (
     <div>
       <header className={style.headerText} style={{ textAlign: 'center' }}>
-      <h1>{planDetails.planName}</h1>
-        </header>
+        <h1>{planDetails.planName}</h1>
+      </header>
+      
       <button onClick={() => router.push('/create-workout-plan')}>
         Create New Workout Plan
       </button>
-      {planName === '15-min-full-workouts'
-        ? Object.keys(organizedExercises).map((key) => (
-            <div key={key}>
-              <h2>{key}</h2> {/* This is the category */}
-              <ul>
-                {organizedExercises[key].map((exercise, index) => (
-                  <li key={index}>
-                    <strong>{exercise.name}</strong> <br />
-                    Sets: {exercise.sets} <br />
-                    Reps: {exercise.reps} <br />
-                    Primary Muscle: {exercise.primaryMuscle} <br />
-                    Adaptation: {exercise.adaptation} <br />
-                    <a href={exercise.videoURL} target="_blank" rel="noopener noreferrer">Watch Video</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        : Object.keys(organizedExercises).map((key) => (
-            <div key={key}>
-              <h2>Exercises for {key}</h2>
-              <ul>
-                {organizedExercises[key].map((exercise, index) => (
-                  <li key={index}>
-                    <strong>{exercise.name}</strong> <br />
-                    Sets: {exercise.sets} <br />
-                    Reps: {exercise.reps} <br />
-                    Primary Muscle: {exercise.primaryMuscle} <br />
-                    Adaptation: {exercise.adaptation} <br />
-                    <a href={exercise.videoURL} target="_blank" rel="noopener noreferrer">Watch Video</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+
+      {/* Dropdown to select day or category */}
+      {Object.keys(organizedExercises).length > 0 && (
+        <div>
+          <label htmlFor="filterSelect">Select {planName === '15-min-full-workouts' ? 'Category' : 'Day'}:</label>
+          <select id="filterSelect" onChange={handleFilterChange} value={selectedFilter}>
+            <option value="">-- Select {planName === '15-min-full-workouts' ? 'Category' : 'Day'} --</option>
+            {Object.keys(organizedExercises).map((filter, index) => (
+              <option key={index} value={filter}>{filter}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Display exercises for the selected day or category */}
+      {selectedFilter && filteredExercises.length > 0 ? (
+        <div>
+          <h2>{planName === '15-min-full-workouts' ? 'Category' : 'Day'}: {selectedFilter}</h2>
+          <ul>
+            {filteredExercises.map((exercise, index) => (
+              <li key={index}>
+                <strong>{exercise.name}</strong> <br />
+                Sets: {exercise.sets} <br />
+                Reps: {exercise.reps} <br />
+                Primary Muscle: {exercise.primaryMuscle} <br />
+                Adaptation: {exercise.adaptation} <br />
+                <a href={exercise.videoURL} target="_blank" rel="noopener noreferrer">Watch Video</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        selectedFilter && <p>No exercises found for {selectedFilter}.</p>
+      )}
     </div>
   );
 }
