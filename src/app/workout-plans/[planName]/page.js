@@ -7,6 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import style from '@/app/components/exercise-item.module.css'
 
+
 export default function WorkoutPlanDetails() {
   const { planName } = useParams();
   const [planDetails, setPlanDetails] = useState(null);
@@ -72,9 +73,8 @@ export default function WorkoutPlanDetails() {
   return (
     <div>
       <header className={style.headerText} style={{ textAlign: 'center' }}>
-        <h1>{planDetails.planName}</h1>
-      </header>
-      
+      <h1>{planDetails.planName}</h1>
+        </header>
       <button onClick={() => router.push('/create-workout-plan')}>
         Create New Workout Plan
       </button>

@@ -1,0 +1,11 @@
+.button {
+    border: black;
+    color: rgb(0, 0, 0);
+    background-color: rgb(123, 199, 240);
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+  }

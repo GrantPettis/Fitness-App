@@ -83,7 +83,7 @@ export default function ExercisesPage() {
         <main className={classes.main}>
             {/* Filter section */}
             <div style={{padding: '8px'}}>
-                    Search by Name:
+                <h1 className={dropdown.title} style={{ display: 'inline', padding: '2px' }}>Search by Name:</h1>
                     <input
                         type="text"
                         name="searchTerm"
