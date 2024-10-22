@@ -6,7 +6,7 @@ import { db } from '../firebase/firebase'; // Correct path to Firebase config
 import { collection, getDocs } from 'firebase/firestore'; // Firebase Firestore functions
 import dropdown from '@/app/components/input-field.module.css'
 import style from '@/app/components/exercise-item.module.css'
-
+import button from '@/app/components/workout-plan-button.module.css'
 export default function WorkoutPlanPage() {
   const [workoutPlans, setWorkoutPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState('');
@@ -57,6 +57,7 @@ export default function WorkoutPlanPage() {
         </header>
       {/* Create Workout Plan button with margin */}
       <button 
+        className= {button.button}
         onClick={() => router.push('/create-workout-plan')}
         style={{ marginBottom: '15px', textAlign: 'right'}} // Adds space below the button
       >

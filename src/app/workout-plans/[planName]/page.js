@@ -6,6 +6,7 @@ import { db } from '../../firebase/firebase'; // Adjust path to your Firebase co
 import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import style from '@/app/components/exercise-item.module.css'
+import button from '@/app/components/workout-plan-button.module.css'
 
 
 export default function WorkoutPlanDetails() {
@@ -81,7 +82,9 @@ export default function WorkoutPlanDetails() {
       <header className={style.headerText} style={{ textAlign: 'center' }}>
       <h1>{planDetails.planName}</h1>
         </header>
-      <button onClick={() => router.push('/create-workout-plan')}>
+      <button 
+      className= {button.button}
+      onClick={() => router.push('/create-workout-plan')}>
         Create New Workout Plan
       </button>
       {planName === '15-min-full-workouts'
