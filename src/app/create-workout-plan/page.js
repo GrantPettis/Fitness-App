@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import { db, auth } from '../firebase/firebase'; // Import Firebase auth and db instances
 import { collection, addDoc, getDocs } from 'firebase/firestore';
+import dropdown from '@/app/components/input-field.module.css';
 
 export default function CreateWorkoutPlan() {
   const router = useRouter(); // Initialize useRouter
@@ -135,9 +136,9 @@ export default function CreateWorkoutPlan() {
 
       {/* Dropdown filter for user-created workout plans */}
       <div>
-        <h2>Your Created Workout Plans</h2>
-        <label htmlFor="user-workout-plan-select">Choose a workout plan:</label>
+        <h1 className={dropdown.title} style={{ display: 'inline', padding: '2px' }}>Your Workout Plans:</h1>
         <select
+          className={dropdown.nav}
           id="user-workout-plan-select"
           value={selectedPlan}
           onChange={handlePlanChange}

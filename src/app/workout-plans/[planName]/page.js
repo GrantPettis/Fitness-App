@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { db } from '../../firebase/firebase'; // Adjust path to your Firebase config
 import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import style from '@/app/components/exercise-item.module.css'
+
 
 export default function WorkoutPlanDetails() {
   const { planName } = useParams();
@@ -76,11 +78,12 @@ export default function WorkoutPlanDetails() {
 
   return (
     <div>
+      <header className={style.headerText} style={{ textAlign: 'center' }}>
+      <h1>{planDetails.planName}</h1>
+        </header>
       <button onClick={() => router.push('/create-workout-plan')}>
         Create New Workout Plan
       </button>
-
-      <h1>{planDetails.planName} Details</h1>
       {planName === '15-min-full-workouts'
         ? Object.keys(organizedExercises).map((key) => (
             <div key={key}>

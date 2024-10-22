@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // Use next/navigation for navigation
 import { db } from '../firebase/firebase'; // Correct path to Firebase config
 import { collection, getDocs } from 'firebase/firestore'; // Firebase Firestore functions
+import dropdown from '@/app/components/input-field.module.css'
+import style from '@/app/components/exercise-item.module.css'
 
 export default function WorkoutPlanPage() {
   const [workoutPlans, setWorkoutPlans] = useState([]);
@@ -48,13 +50,15 @@ export default function WorkoutPlanPage() {
   };
   
   return (
+    
     <div>
-      <h1>Workout Plan Page</h1>
-
+       <header className={style.headerText} style={{ textAlign: 'center' }}>
+            <h1>Workout Plans</h1>
+        </header>
       {/* Create Workout Plan button with margin */}
-      <button
+      <button 
         onClick={() => router.push('/create-workout-plan')}
-        style={{ marginBottom: '15px' }} // Adds space below the button
+        style={{ marginBottom: '15px', textAlign: 'right'}} // Adds space below the button
       >
         Create Workout Plan
       </button>
@@ -70,8 +74,9 @@ export default function WorkoutPlanPage() {
 
       {/* Dropdown filter for workout plans fetched from Firebase */}
       <div>
-        <label htmlFor="workout-plan-select">Choose a workout plan:</label>
-        <select
+      <h1 className={dropdown.title} style={{ display: 'inline', padding: '2px' }}>Select a Workout Plan: </h1>
+        <select 
+          className={dropdown.nav}
           id="workout-plan-select"
           value={selectedPlan}
           onChange={handlePlanChange}

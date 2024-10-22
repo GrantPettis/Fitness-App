@@ -77,7 +77,7 @@ export default function ExercisesPage() {
 
     return (
         <>
-        <header className={style.headerText}>
+        <header className={style.headerText} style={{ textAlign: 'center' }}>
             <h1>Exercises</h1>
         </header>
         <main className={classes.main}>
