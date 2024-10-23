@@ -1,445 +1,312 @@
-"use client"
-// firebaseConfig.js
-//import { initializeApp } from "firebase/app";
-//import { getFirestore } from "firebase/firestore";
+"use client"; // Ensure this is a client-side component
 
-// Your Firebase configuration (use your own Firebase project credentials)
-// const firebaseConfig = {
-//     apiKey: "YOUR_API_KEY",
-//     authDomain: "YOUR_AUTH_DOMAIN",
-//     projectId: "YOUR_PROJECT_ID",
-//     storageBucket: "YOUR_STORAGE_BUCKET",
-//     messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-//     appId: "YOUR_APP_ID"
-// };
-
-
-// pages/progress_tracking_page.js
-import { db } from '@/app/firebase/firebase'; // Firestore instance
 import { useState, useEffect } from 'react';
-import { collection, addDoc } from 'firebase/firestore'; // Firestore functions
+import { getAuth } from 'firebase/auth';
+import { db } from '../firebase/firebase';  // Import `db` from your firebase config
+import { collection, addDoc, getDocs, query, where, orderBy, doc, deleteDoc, updateDoc } from 'firebase/firestore';  // Import Firestore functions
+import { useRouter } from 'next/navigation';  // Import useRouter
 
-export default function ProgressTrackingPage() {
-    const [formData, setFormData] = useState({
-        speed: {
-            goal: 'Decrease Time',
-            name: '40-yard dash',
-            reps: '1',
-            score: '',
-            sets: '3',
-        },
-        muscularEndurance: [
-            {
-                goal: 'M: 25 F:15',
-                name: 'Push Up',
-                reps: 'Fail',
-                score: '',
-                sets: '1',
-            },
-            {
-                goal: '1 minute',
-                name: 'Plank Hold',
-                reps: 'Fail',
-                score: '',
-                sets: '1',
-            }
-        ],
-        strength: [
-            {
-                goal: '30-60 sec.',
-                name: 'Dead Hang',
-                reps: '1',
-                score: '',
-                sets: '1',
-            },
-            {
-                goal: '1/3 Bodyweight',
-                name: 'Goblet Squat Hold',
-                reps: '30 sec.',
-                score: '',
-                sets: '1',
-            },
-            {
-                goal: 'Body Weight',
-                name: 'Squat/Leg Extension',
-                reps: '1',
-                score: '',
-                sets: '3',
-            },
-            {
-                goal: 'increase Weight',
-                name: 'Bench Press',
-                reps: '1',
-                score: '',
-                sets: '3',
-            }
-        ],
-        power: [
-            {
-                goal: '18-24 in.',
-                name: 'Vertical Test',
-                reps: '1',
-                score: '',
-                sets: '3',
-            },
-            {
-                goal: 'Your Height',
-                name: 'Broad Jump',
-                reps: '1',
-                score: '',
-                sets: '3',
-            }
-        ],
-        steadyState: {
-            goal: 'breathing Control',
-            name: 'Walking, Jogging, Biking, Swimming',
-            reps: '20-30 minutes',
-            score: '',
-            sets: '1',
-        },
-        skillAndMovement: [
-            {
-                goal: '5',
-                name: 'Squat',
-                reps: '8',
-                score: '',
-                sets: '1',
-            },
-            {
-                goal: '5',
-                name: 'Push Up',
-                reps: '8',
-                score: '',
-                sets: '1',
-            },
-            {
-                goal: '5',
-                name: 'Deadlift',
-                reps: '8',
-                score: '',
-                sets: '1',
-            },
-            {
-                goal: '5',
-                name: 'Pull Up',
-                reps: '8',
-                score: '',
-                sets: '1',
-            }
-        ],
-        maximalAnaerobicCapacity: [
-            {
-                goal: '',
-                name: '1 mile walk',
-                reps: '1',
-                score: 'M:50 F:35',
-                sets: '1',
-            },
-            {
-                goal: 'M:50, F:35',
-                name: '12 minute Cooper Test',
-                reps: '12 minutes',
-                score: '',
-                sets: '1',
-            }
-        ]
-    });
+const LogProgress = () => {
+  const [exercise, setExercise] = useState('');  // New state for exercise
+  const [category, setCategory] = useState('Weightlifting');  // Default category
+  const [valueType, setValueType] = useState('Weight');
+  const [value, setValue] = useState('');
+  const [sets, setSets] = useState('');
+  const [reps, setReps] = useState('');
+  const [goalValue, setGoalValue] = useState('');  // State for goal value
+  const [goalSets, setGoalSets] = useState('');  // State for goal sets
+  const [goalReps, setGoalReps] = useState('');  // State for goal reps
+  const [goalWeight, setGoalWeight] = useState('');  // Optional goal body weight
+  const [unit, setUnit] = useState('lbs');  // State for lbs/kg unit
+  const [distanceUnit, setDistanceUnit] = useState('miles');  // State for miles/kilometers for swimming and running
+  const [goalDistanceUnit, setGoalDistanceUnit] = useState('miles');  // State for goal distance unit
+  const [message, setMessage] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('All');  // Filter by category
+  const [dateFilter, setDateFilter] = useState('All');  // Filter by date range
+  const [editId, setEditId] = useState(null);  // Track the ID of the entry being edited
+  const [progressData, setProgressData] = useState([]);  // State to hold retrieved progress
 
-    // const handleChange = (e) => {
-    //     setFormData({
-    //         ...formData,
-    //         [e.target.name]: e.target.value,
-    //     });
-    // };
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  const router = useRouter(); // Initialize useRouter
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        // Implement nested updates for each category
-        // (Example: If updating speed's score or any other category's specific field)
-    };
+  // Handle filter submit and navigate to progress-results page
+  const handleFilterSubmit = () => {
+    router.push(`/progress_tracking/progress-results?category=${categoryFilter}&date=${dateFilter}`);
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  // Submit progress form (handle both add and edit)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        try {
-            const docRef = await addDoc(collection(db, "exerciseProgress"), formData);
-            alert("Progress saved with ID: " + docRef.id);
-            // Clear the form after submission or (reset the state to initial form data)
-            // setFormData({
-            //     speed: '',
-            //     muscularEndurance: '',
-            //     strength: '',
-            //     power: '',
-            //     steadyState: '',
-            //     skillAndMovement: '',
-            //     maximalAnaerobicCapacity: ''
-            // });
-        } catch (e) {
-            console.error("Error adding document: ", e);
-            alert("Error saving progress.");
-        }
-    };
+    if (!currentUser) {
+      console.log('User not authenticated');
+      setMessage('Please sign in to track your progress.');
+      return;
+    }
 
-    return (
+    const userId = currentUser.uid;
+
+    try {
+      if (editId) {
+        // Update existing progress entry
+        const docRef = doc(db, 'users', userId, 'progress', editId);
+        await updateDoc(docRef, {
+          exercise,
+          category,
+          valueType,
+          value,
+          sets: valueType === 'Weight' ? sets : '',
+          reps: valueType === 'Weight' ? reps : '',
+          goalValue,
+          goalSets,
+          goalReps,
+          goalWeight,
+          unit,
+          distanceUnit,  // Save distance unit (miles or kilometers)
+          goalDistanceUnit,  // Save goal distance unit
+        });
+        setMessage("Progress updated successfully!");
+        setEditId(null);  // Reset edit state
+      } else {
+        // Add new progress entry
+        await addDoc(collection(db, 'users', userId, 'progress'), {
+          exercise,
+          category,
+          valueType,
+          value,
+          sets: valueType === 'Weight' ? sets : '',
+          reps: valueType === 'Weight' ? reps : '',
+          goalValue,
+          goalSets,
+          goalReps,
+          goalWeight,
+          unit,
+          distanceUnit,  // Save distance unit (miles or kilometers)
+          goalDistanceUnit,  // Save goal distance unit
+          date: new Date(),
+        });
+        setMessage("Progress added successfully!");
+      }
+
+      setExercise('');
+      setCategory('Weightlifting');
+      setValue('');
+      setSets('');
+      setReps('');
+      setGoalValue('');
+      setGoalSets('');
+      setGoalReps('');
+      setGoalWeight('');
+      setUnit('lbs');  // Reset unit
+      setDistanceUnit('miles');  // Reset distance unit
+      setGoalDistanceUnit('miles');  // Reset goal distance unit
+    } catch (error) {
+      console.error("Error saving progress: ", error);
+      setMessage("Error saving progress. Please try again.");
+    }
+  };
+
+  // Handle deleting progress entry
+  const handleDelete = async (id) => {
+    if (!currentUser) return;
+
+    const userId = currentUser.uid;
+    try {
+      await deleteDoc(doc(db, 'users', userId, 'progress', id));
+      setMessage("Progress deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting progress: ", error);
+      setMessage("Error deleting progress. Please try again.");
+    }
+  };
+
+  // Handle editing progress entry (load data into form)
+  const handleEdit = (entry) => {
+    setExercise(entry.exercise);
+    setCategory(entry.category);
+    setValueType(entry.valueType);
+    setValue(entry.value);
+    setSets(entry.sets || '');
+    setReps(entry.reps || '');
+    setGoalValue(entry.goalValue || '');
+    setGoalSets(entry.goalSets || '');
+    setGoalReps(entry.goalReps || '');
+    setGoalWeight(entry.goalWeight || '');
+    setUnit(entry.unit || 'lbs');
+    setDistanceUnit(entry.distanceUnit || 'miles');
+    setGoalDistanceUnit(entry.goalDistanceUnit || 'miles');
+    setEditId(entry.id);  // Track the entry being edited
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
         <div>
-            <h1>Progress Tracking Page</h1>
-            <form onSubmit={handleSubmit}>
-                {/* Render Speed Section */}
-                <h2>Speed</h2>
-                <label>
-                    Goal:
-                    <input
-                        type="text"
-                        name="goal"
-                        value={formData.speed.goal}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.speed.name}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Reps:
-                    <input
-                        type="text"
-                        name="reps"
-                        value={formData.speed.reps}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Score:
-                    <input
-                        type="text"
-                        name="score"
-                        value={formData.speed.score}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Sets:
-                    <input
-                        type="text"
-                        name="sets"
-                        value={formData.speed.sets}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-
-                {/* <label>
-                    Skill and Movement:
-                    <input
-                        type="text"
-                        name="skillAndMovement"
-                        value={formData.skillAndMovement}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Maximal Anaerobic Capacity:
-                    <input
-                        type="text"
-                        name="maximalAnaerobicCapacity"
-                        value={formData.maximalAnaerobicCapacity}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br /> */}
-
-
-                 {/* Muscular Endurance, Strength, Power, etc. would follow a similar structure Check*/}
-                 {/* You would map through formData for array-based categories  Check*/}
-
-
-
-
-                  {/* <h1>Progress Tracking Page</h1>
-                     <form onSubmit={handleSubmit}> */}
-                {/*Render Muscularenderance Section*/}
-                 <h2>MuscularEndurance</h2>
-                <label>
-                    Goal:
-                    <input
-                        type="text"
-                        name="goal"
-                        value={formData.muscularEndurance.goal}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.muscularEndurance.name}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Reps:
-                    <input
-                        type="text"
-                        name="reps"
-                        value={formData.muscularEndurance.reps}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Score:
-                    <input
-                        type="text"
-                        name="score"
-                        value={formData.muscularEndurance.score}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Sets:
-                    <input
-                        type="text"
-                        name="sets"
-                        value={formData.muscularEndurance.sets}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-
-                      {/* <h1>Progress Tracking Page</h1>
-                     <form onSubmit={handleSubmit}> */}
-                      {/* Render Strength Section*/}
-                <h2>Speed</h2>
-                <label>
-                    Goal:
-                    <input
-                        type="text"
-                        name="goal"
-                        value={formData.strength.goal}
-                        onChange={handleChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.strength.name}
-                        onChange={handleChange}
-                            />
-                        </label>
-                        <br />
-                     <label>
-                     Reps:
-                    <input
-                        type="text"
-                        name="reps"
-                        value={formData.strength.reps}
-                        onChange={handleChange}
-                             />
-                        </label>
-                        <br />
-                        <label>
-                            Score:
-                            <input
-                                type="text"
-                                name="score"
-                                value={formData.strength.score}
-                                onChange={handleChange}
-                            />
-                        </label>
-                        <br />
-                        <label>
-                            Sets:
-                            <input
-                                type="text"
-                                name="sets"
-                                value={formData.strength.sets}
-                                onChange={handleChange}
-                            />
-                        </label>
-                        <br />
-
-        
-                      {/* <h1>Progress Tracking Page</h1>
-                     <form onSubmit={handleSubmit}> */}
-                  {/* Render Power Section */}
-                        <h2>Power</h2>
-                        <label>
-                            Goal:
-                            <input
-                                type="text"
-                                name="goal"
-                                value={formData.power.goal}
-                                onChange={handleChange}
-                            />
-                        </label>
-                        <br />
-                        <label>
-                            Name:
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.power.name}
-                                onChange={handleChange}
-                                    />
-                                </label>
-                                <br />
-                            <label>
-                            Reps:
-                            <input
-                                type="text"
-                                name="reps"
-                                value={formData.power.reps}
-                                onChange={handleChange}
-                                    />
-                                </label>
-                                <br />
-                                <label>
-                                    Score:
-                                    <input
-                                        type="text"
-                                        name="score"
-                                        value={formData.power.score}
-                                        onChange={handleChange}
-                                    />
-                                </label>
-                                <br />
-                                <label>
-                                    Sets:
-                                    <input
-                                        type="text"
-                                        name="sets"
-                                        value={formData.power.sets}
-                                        onChange={handleChange}
-                                    />
-                                </label>
-                                <br />
-    
-                <button type="submit">Save Progress</button>
-            </form>
+          <label>Exercise:</label>
+          <input
+            type="text"
+            value={exercise}
+            onChange={(e) => setExercise(e.target.value)}
+            placeholder="Enter exercise (e.g., Bench Press)"
+          />
         </div>
-    );
-}
 
-//     match /databases/{database}/documents {
-//       match /exerciseProgress/{document} {
-//         allow read, write: if request.auth != null;
-//       }
-//     }
-//   }
+        <div>
+          <label>Category:</label>
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <option value="Weightlifting">Weightlifting</option>
+            <option value="Running">Running</option>
+            <option value="Swimming">Swimming</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Value Type:</label>
+          <select value={valueType} onChange={(e) => setValueType(e.target.value)}>
+            <option value="Weight">Weight</option>
+            <option value="Distance">Distance</option>
+            <option value="Time">Time</option>
+          </select>
+        </div>
+
+        <div>
+          <label>{valueType}:</label>
+          <input
+            type="number"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder={valueType === 'Weight' ? 'Enter weight' : `Enter ${valueType.toLowerCase()}`}
+          />
+        </div>
+
+        {/* Unit selector for weight */}
+        {valueType === 'Weight' && (
+          <div>
+            <label>Unit:</label>
+            <select value={unit} onChange={(e) => setUnit(e.target.value)}>
+              <option value="lbs">lbs</option>
+              <option value="kg">kg</option>
+            </select>
+          </div>
+        )}
+
+        {/* Distance Unit selector for running/swimming */}
+        {valueType === 'Distance' && (category === 'Running' || category === 'Swimming') && (
+          <div>
+            <label>Distance Unit:</label>
+            <select value={distanceUnit} onChange={(e) => setDistanceUnit(e.target.value)}>
+              <option value="miles">Miles</option>
+              <option value="kilometers">Kilometers</option>
+            </select>
+          </div>
+        )}
+
+        {valueType === 'Weight' && (
+          <>
+            <div>
+              <label>Sets:</label>
+              <input
+                type="number"
+                value={sets}
+                onChange={(e) => setSets(e.target.value)}
+                placeholder="Enter sets"
+              />
+            </div>
+
+            <div>
+              <label>Reps:</label>
+              <input
+                type="number"
+                value={reps}
+                onChange={(e) => setReps(e.target.value)}
+                placeholder="Enter reps"
+              />
+            </div>
+          </>
+        )}
+
+        <div>
+          <label>Goal {valueType}:</label>
+          <input
+            type="number"
+            value={goalValue}
+            onChange={(e) => setGoalValue(e.target.value)}
+            placeholder={`Enter goal ${valueType}`}
+          />
+        </div>
+
+        {/* Goal Distance Unit selector for running/swimming */}
+        {valueType === 'Distance' && (category === 'Running' || category === 'Swimming') && (
+          <div>
+            <label>Goal Distance Unit:</label>
+            <select value={goalDistanceUnit} onChange={(e) => setGoalDistanceUnit(e.target.value)}>
+              <option value="miles">Miles</option>
+              <option value="kilometers">Kilometers</option>
+            </select>
+          </div>
+        )}
+
+        {valueType === 'Weight' && (
+          <>
+            <div>
+              <label>Goal Sets:</label>
+              <input
+                type="number"
+                value={goalSets}
+                onChange={(e) => setGoalSets(e.target.value)}
+                placeholder="Enter goal sets"
+              />
+            </div>
+
+            <div>
+              <label>Goal Reps:</label>
+              <input
+                type="number"
+                value={goalReps}
+                onChange={(e) => setGoalReps(e.target.value)}
+                placeholder="Enter goal reps"
+              />
+            </div>
+          </>
+        )}
+
+        <div>
+          <label>Goal Body Weight (optional):</label>
+          <input
+            type="number"
+            value={goalWeight}
+            onChange={(e) => setGoalWeight(e.target.value)}
+            placeholder="Enter goal body weight"
+          />
+        </div>
+
+        <button type="submit">{editId ? "Update Progress" : "Submit Progress"}</button>
+      </form>
+      {message && <p>{message}</p>}
+
+      <div>
+        <label>Filter by Category:</label>
+        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+          <option value="All">All</option>
+          <option value="Weightlifting">Weightlifting</option>
+          <option value="Running">Running</option>
+          <option value="Swimming">Swimming</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Filter by Date:</label>
+        <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
+          <option value="All">All Time</option>
+          <option value="Last Week">Last Week</option>
+          <option value="Last Month">Last Month</option>
+        </select>
+      </div>
+
+      <button onClick={handleFilterSubmit}>Submit Filter</button> {/* Submit Filter Button */}
+    </div>
+  );
+};
+
+export default LogProgress;
