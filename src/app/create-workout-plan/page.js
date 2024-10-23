@@ -7,6 +7,7 @@ import { collection, addDoc, getDocs } from 'firebase/firestore';
 import dropdown from '@/app/components/dropdown-menu.module.css';
 import style from '@/app/components/exercise-item.module.css'
 import form from '@/app/components/text-form-field.module.css'
+import button from '@/app/components/workout-plan-button.module.css'
 
 export default function CreateWorkoutPlan() {
   const router = useRouter(); // Initialize useRouter
@@ -129,6 +130,7 @@ export default function CreateWorkoutPlan() {
           </div>
         ))}
         <button 
+          className={button.button}
           type="button" 
           onClick={addExercise} 
           style={{ marginBottom: '10px', marginRight: '10px' }} // Adds space below and to the right
@@ -136,6 +138,7 @@ export default function CreateWorkoutPlan() {
           Add Another Exercise
         </button>
         <button 
+          className={button.button}
           type="submit" 
           style={{ marginBottom: '10px' }} // Adds space below the button
         >
