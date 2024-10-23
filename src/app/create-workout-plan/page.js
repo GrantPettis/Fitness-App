@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import { db, auth } from '../firebase/firebase'; // Import Firebase auth and db instances
 import { collection, addDoc, getDocs } from 'firebase/firestore';
-import dropdown from '@/app/components/input-field.module.css';
+import dropdown from '@/app/components/dropdown-menu.module.css';
+import style from '@/app/components/exercise-item.module.css'
+import form from '@/app/components/text-form-field.module.css'
 
 export default function CreateWorkoutPlan() {
   const router = useRouter(); // Initialize useRouter
@@ -81,10 +83,14 @@ export default function CreateWorkoutPlan() {
   };
 
   return (
+    <>
+    <header className={style.headerText} style={{ textAlign: 'center' }}>
+            <h1>Create a Workout Plan</h1>
+        </header>
     <div>
       <form onSubmit={handleSubmit}>
-        <h1>Create Workout Plan</h1>
-        <input 
+        <input
+          className={form.input} 
           type="text" 
           value={planName} 
           onChange={(e) => setPlanName(e.target.value)} 
@@ -94,6 +100,7 @@ export default function CreateWorkoutPlan() {
         {exercises.map((exercise, index) => (
           <div key={index}>
             <input 
+              className={form.input} 
               type="text" 
               name="name" 
               value={exercise.name} 
@@ -102,6 +109,7 @@ export default function CreateWorkoutPlan() {
               required 
             />
             <input 
+              className={form.input} 
               type="text" 
               name="sets" 
               value={exercise.sets} 
@@ -110,6 +118,7 @@ export default function CreateWorkoutPlan() {
               required 
             />
             <input 
+              className={form.input} 
               type="text" 
               name="reps" 
               value={exercise.reps} 
@@ -153,5 +162,6 @@ export default function CreateWorkoutPlan() {
         </select>
       </div>
     </div>
+    </>
   );
 }

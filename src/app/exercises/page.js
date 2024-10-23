@@ -7,7 +7,8 @@ import classes from '@/app/components/exercise-template.module.css';
 import grid from '@/app/components/exercise-grid.module.css'
 import style from '@/app/components/exercise-item.module.css'
 import { resolve } from 'styled-jsx/css';
-import dropdown from '@/app/components/input-field.module.css'
+import dropdown from '@/app/components/dropdown-menu.module.css'
+import form from '@/app/components/text-form-field.module.css'
 const ITEMS_PER_PAGE = 50; // Number of exercises per page
 
 // Fetch exercises from Firestore
@@ -85,6 +86,7 @@ export default function ExercisesPage() {
             <div style={{padding: '8px'}}>
                 <h1 className={dropdown.title} style={{ display: 'inline', padding: '2px' }}>Search by Name:</h1>
                     <input
+                        className={form.input}
                         type="text"
                         name="searchTerm"
                         value={filter.searchTerm}

@@ -6,6 +6,9 @@ import { db } from '../../firebase/firebase'; // Adjust path to your Firebase co
 import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import style from '@/app/components/exercise-item.module.css'
+import dropdown from '@/app/components/dropdown-menu.module.css'
+import button from '@/app/components/workout-plan-button.module.css'
+import grid from '@/app/components/exercise-grid.module.css'
 
 
 export default function WorkoutPlanDetails() {
@@ -75,15 +78,19 @@ export default function WorkoutPlanDetails() {
       <header className={style.headerText} style={{ textAlign: 'center' }}>
       <h1>{planDetails.planName}</h1>
         </header>
-      <button onClick={() => router.push('/create-workout-plan')}>
-        Create New Workout Plan
+        <button 
+        className= {button.button}
+        onClick={() => router.push('/create-workout-plan')}
+        style={{ marginBottom: '15px', textAlign: 'right'}} // Adds space below the button
+      >
+        Create Workout Plan
       </button>
 
       {/* Dropdown to select day or category */}
       {Object.keys(organizedExercises).length > 0 && (
         <div>
-          <label htmlFor="filterSelect">Select {planName === '15-min-full-workouts' ? 'Category' : 'Day'}:</label>
-          <select id="filterSelect" onChange={handleFilterChange} value={selectedFilter}>
+          <label htmlFor="filterSelect" className={dropdown.title}>Select {planName === '15-min-full-workouts' ? 'Category' : 'Day'}:</label>
+          <select id="filterSelect" onChange={handleFilterChange} value={selectedFilter} className={dropdown.nav}>
             <option value="">-- Select {planName === '15-min-full-workouts' ? 'Category' : 'Day'} --</option>
             {Object.keys(organizedExercises).map((filter, index) => (
               <option key={index} value={filter}>{filter}</option>
@@ -96,7 +103,7 @@ export default function WorkoutPlanDetails() {
       {selectedFilter && filteredExercises.length > 0 ? (
         <div>
           <h2>{planName === '15-min-full-workouts' ? 'Category' : 'Day'}: {selectedFilter}</h2>
-          <ul>
+          <ul className={grid.exercises}>
             {filteredExercises.map((exercise, index) => (
               <li key={index}>
                 <strong>{exercise.name}</strong> <br />

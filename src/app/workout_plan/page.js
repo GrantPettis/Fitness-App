@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // Use next/navigation for navigation
 import { db } from '../firebase/firebase'; // Correct path to Firebase config
 import { collection, getDocs } from 'firebase/firestore'; // Firebase Firestore functions
-import dropdown from '@/app/components/input-field.module.css'
+import dropdown from '@/app/components/dropdown-menu.module.css'
 import style from '@/app/components/exercise-item.module.css'
 import button from '@/app/components/workout-plan-button.module.css'
 export default function WorkoutPlanPage() {
