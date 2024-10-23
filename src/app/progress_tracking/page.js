@@ -323,7 +323,7 @@ export default function ProgressTrackingPage() {
                       {/* <h1>Progress Tracking Page</h1>
                      <form onSubmit={handleSubmit}> */}
                       {/* Render Strength Section*/}
-                <h2>Speed</h2>
+                <h2>Strength</h2>
                 <label>
                     Goal:
                     <input
@@ -430,7 +430,166 @@ export default function ProgressTrackingPage() {
                                     />
                                 </label>
                                 <br />
-    
+
+                                 {/* Render SteadyState Section */}
+                        <h2>SteadyState</h2>
+                        <label>
+                            Goal:
+                            <input
+                                type="text"
+                                name="goal"
+                                value={formData.steadyState.goal}
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <br />
+                        <label>
+                            Name:
+                            <input
+                                type="text"
+                                name="name"
+                                value={formData.steadyState.name}
+                                onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
+                            <label>
+                            Reps:
+                            <input
+                                type="text"
+                                name="reps"
+                                value={formData.steadyState.reps}
+                                onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
+                                <label>
+                                    Score:
+                                    <input
+                                        type="text"
+                                        name="score"
+                                        value={formData.steadyState.score}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
+                                <label>
+                                    Sets:
+                                    <input
+                                        type="text"
+                                        name="sets"
+                                        value={formData.steadyState.sets}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
+
+
+                                 {/* Render SteadyState Section */}
+                        <h2>SkillAndMovement</h2>
+                        <label>
+                            Goal:
+                            <input
+                                type="text"
+                                name="goal"
+                                value={formData.skillAndMovement.goal}
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <br />
+                        <label>
+                            Name:
+                            <input
+                                type="text"
+                                name="name"
+                                value={formData.skillAndMovement.name}
+                                onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
+                            <label>
+                            Reps:
+                            <input
+                                type="text"
+                                name="reps"
+                                value={formData.skillAndMovement.reps}
+                                onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
+                                <label>
+                                    Score:
+                                    <input
+                                        type="text"
+                                        name="score"
+                                        value={formData.skillAndMovement.score}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
+                                <label>
+                                    Sets:
+                                    <input
+                                        type="text"
+                                        name="sets"
+                                        value={formData.skillAndMovement.sets}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
+
+                                 {/* Render maximum Section */}
+                        <h2>maximalAnaerobicCapacity</h2>
+                        <label>
+                            Goal:
+                            <input
+                                type="text"
+                                name="goal"
+                                value={formData.maximalAnaerobicCapacity.goal}
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <br />
+                        <label>
+                            Name:
+                            <input
+                                type="text"
+                                name="name"
+                                value={formData.maximalAnaerobicCapacity.name}
+                                onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
+                            <label>
+                            Reps:
+                            <input
+                                type="text"
+                                name="reps"
+                                value={formData.maximalAnaerobicCapacity.reps}
+                                onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
+                                <label>
+                                    Score:
+                                    <input
+                                        type="text"
+                                        name="score"
+                                        value={formData.maximalAnaerobicCapacity.score}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
+                                <label>
+                                    Sets:
+                                    <input
+                                        type="text"
+                                        name="sets"
+                                        value={formData.maximalAnaerobicCapacity.sets}
+                                        onChange={handleChange}
+                                    />
+                                </label>
+                                <br />
                 <button type="submit">Save Progress</button>
             </form>
         </div>
