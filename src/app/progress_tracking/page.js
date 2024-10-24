@@ -236,7 +236,7 @@ const LogProgress = () => {
           />
         </div>
 
-        {/* Goal Distance Unit selector for running/swimming */}
+        {/* The Goal Distance Unit selector for running/swimming */}
         {valueType === 'Distance' && (category === 'Running' || category === 'Swimming') && (
           <div>
             <label>Goal Distance Unit:</label>
@@ -294,7 +294,7 @@ const LogProgress = () => {
           <option value="Swimming">Swimming</option>
         </select>
       </div>
-
+     
       <div>
         <label>Filter by Date:</label>
         <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
