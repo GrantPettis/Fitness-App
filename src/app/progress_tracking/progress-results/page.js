@@ -52,7 +52,7 @@ const ProgressResults = () => {
 
       fetchFilteredProgress();
     }
-  }, [currentUser, category, date]); // Re-fetch data when category or date filter changes
+  }, [currentUser, category, date]); // Re-fetch the data when category or date filter changes
 
   return (
     <div>
