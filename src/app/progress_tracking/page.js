@@ -485,7 +485,7 @@ export default function ProgressTrackingPage() {
                                 <br />
 
 
-                                 {/* Render SteadyState Section */}
+                                 {/* Render SkillaAndMovement Section  didn't pop up on client side come back*/} 
                         <h2>SkillAndMovement</h2>
                         <label>
                             Goal:
@@ -538,7 +538,7 @@ export default function ProgressTrackingPage() {
                                 </label>
                                 <br />
 
-                                 {/* Render maximum Section */}
+                                 {/* Render maximumAnaerobicCapacity Section didn't pop up on the client side come back*/}
                         <h2>maximalAnaerobicCapacity</h2>
                         <label>
                             Goal:
