@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { auth, db } from '../firebase/firebase';  // Import Firebase auth and Firestore instance
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';  // Firestore functions
+import button from '@/app/components/workout-plan-button.module.css'
+import form from '@/app/components/text-form-field.module.css'
+import style from '@/app/components/exercise-item.module.css'
 
 export default function SignUpPage() {
   const [name, setName] = useState('');
@@ -44,11 +47,14 @@ export default function SignUpPage() {
 
   return (
     <div className="sign-up-container">
-      <h1>Sign Up</h1>
+      <header className={style.headerText} style={{ textAlign: 'center' }}>
+        <h1>Sign Up</h1>
+      </header>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Name:</label>
           <input
+            className={form.input}
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -58,6 +64,7 @@ export default function SignUpPage() {
         <div>
           <label>Email:</label>
           <input
+            className={form.input}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -67,13 +74,14 @@ export default function SignUpPage() {
         <div>
           <label>Password:</label>
           <input
+            className={form.input}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button type="submit">Sign Up</button>
+        <button className={button.button} type="submit">Sign Up</button>
       </form>
     </div>
   );

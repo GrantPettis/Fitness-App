@@ -102,7 +102,6 @@ export default function WorkoutPlanDetails() {
       {/* Display exercises for the selected day or category */}
       {selectedFilter && filteredExercises.length > 0 ? (
         <div>
-          <h2>{planName === '15-min-full-workouts' ? 'Category' : 'Day'}: {selectedFilter}</h2>
           <ul className={grid.exercises}>
             {filteredExercises.map((exercise, index) => (
               <li key={index}>

@@ -5,6 +5,9 @@ import { signInWithEmailAndPassword, getIdTokenResult, setPersistence, browserLo
 import Link from 'next/link';  // Import Link from Next.js for navigation
 import { useRouter } from 'next/navigation';
 import { auth } from '../firebase/firebase';  // Import the initialized auth from firebase.js
+import form from '@/app/components/text-form-field.module.css'
+import button from '@/app/components/workout-plan-button.module.css'
+import style from '@/app/components/exercise-item.module.css'
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
@@ -46,11 +49,14 @@ export default function SignInPage() {
 
   return (
     <div className="sign-in-container">
-      <h1>Sign In</h1>
+      <header className={style.headerText} style={{ textAlign: 'center' }}>
+        <h1>Sign In</h1>
+      </header>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
           <input
+            className={form.input}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -60,18 +66,19 @@ export default function SignInPage() {
         <div>
           <label>Password:</label>
           <input
+            className={form.input}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button type="submit">Sign In</button>
+        <button className={button.button} type="submit">Sign In</button>
       </form>
 
       <p>
         Don’t have an account?{' '}
-        <Link href="/sign_up">Sign Up</Link>  {/* Link to the Sign-Up page */}
+        <Link href="/sign_up" style = {{color: '#0000EE'}} > <u>Sign Up </u></Link>  {/* Link to the Sign-Up page */}
       </p>
     </div>
   );
