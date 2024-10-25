@@ -89,11 +89,6 @@ export default function UserDashboard() {
           <option key={plan.id} value={plan.id}>{plan.planName}</option>
         ))}
       </select>
-
-      <h2>Filter Menu</h2>
-      <button onClick={() => handleNavigation('/exercises')}>Exercises</button>
-      <button onClick={() => handleNavigation('/workout-plans')}>Workout Plans</button>
-      <button onClick={() => handleNavigation('/progress-tracking')}>Track Your Progress</button>
     </div>
   );
 }
