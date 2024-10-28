@@ -54,7 +54,7 @@ export default function CreateWorkoutPlan() {
       try {
         // Use the user's UID to save the workout plan under their document in the `createdWorkoutPlans` subcollection
         const userWorkoutPlansRef = collection(db, `users/${user.uid}/createdWorkoutPlans`);
-        await addDoc(userWorkoutPlansRef, {
+        const docRef = await addDoc(userWorkoutPlansRef, {
           planName,
           exercises,
           createdAt: new Date(), // Add created date
@@ -65,8 +65,8 @@ export default function CreateWorkoutPlan() {
         setExercises([{ name: '', sets: '', reps: '' }]);
         alert('Workout plan saved!');
 
-        // Redirect to the workout plans page after saving
-        router.push('/workout-plans');
+        // Redirect to the specific workout plan page after saving
+        router.push(`/user-created-workout-plans/${docRef.id}`);
       } catch (error) {
         console.error("Error adding document: ", error);
       }
@@ -85,86 +85,86 @@ export default function CreateWorkoutPlan() {
 
   return (
     <>
-    <header className={style.headerText} style={{ textAlign: 'center' }}>
-            <h1>Create a Workout Plan</h1>
-        </header>
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          className={form.input} 
-          type="text" 
-          value={planName} 
-          onChange={(e) => setPlanName(e.target.value)} 
-          placeholder="Workout Plan Name" 
-          required 
-        />
-        {exercises.map((exercise, index) => (
-          <div key={index}>
-            <input 
-              className={form.input} 
-              type="text" 
-              name="name" 
-              value={exercise.name} 
-              onChange={(e) => handleExerciseChange(index, e)} 
-              placeholder="Exercise Name" 
-              required 
-            />
-            <input 
-              className={form.input} 
-              type="text" 
-              name="sets" 
-              value={exercise.sets} 
-              onChange={(e) => handleExerciseChange(index, e)} 
-              placeholder="Sets" 
-              required 
-            />
-            <input 
-              className={form.input} 
-              type="text" 
-              name="reps" 
-              value={exercise.reps} 
-              onChange={(e) => handleExerciseChange(index, e)} 
-              placeholder="Reps" 
-              required 
-            />
-          </div>
-        ))}
-        <button 
-          className={button.button}
-          type="button" 
-          onClick={addExercise} 
-          style={{ marginBottom: '10px', marginRight: '10px' }} // Adds space below and to the right
-        >
-          Add Another Exercise
-        </button>
-        <button 
-          className={button.button}
-          type="submit" 
-          style={{ marginBottom: '10px' }} // Adds space below the button
-        >
-          Save Workout Plan
-        </button>
-      </form>
-
-      {/* Dropdown filter for user-created workout plans */}
+      <header className={style.headerText} style={{ textAlign: 'center' }}>
+        <h1>Create a Workout Plan</h1>
+      </header>
       <div>
-        <h1 className={dropdown.title} style={{ display: 'inline', padding: '2px' }}>Your Workout Plans:</h1>
-        <select
-          className={dropdown.nav}
-          id="user-workout-plan-select"
-          value={selectedPlan}
-          onChange={handlePlanChange}
-          style={{ marginTop: '10px' }} // Adds space above the dropdown
-        >
-          <option value="">--Select a Plan--</option>
-          {userCreatedPlans.map((plan) => (
-            <option key={plan.id} value={plan.id}>
-              {plan.planName}
-            </option>
+        <form onSubmit={handleSubmit}>
+          <input
+            className={form.input} 
+            type="text" 
+            value={planName} 
+            onChange={(e) => setPlanName(e.target.value)} 
+            placeholder="Workout Plan Name" 
+            required 
+          />
+          {exercises.map((exercise, index) => (
+            <div key={index}>
+              <input 
+                className={form.input} 
+                type="text" 
+                name="name" 
+                value={exercise.name} 
+                onChange={(e) => handleExerciseChange(index, e)} 
+                placeholder="Exercise Name" 
+                required 
+              />
+              <input 
+                className={form.input} 
+                type="text" 
+                name="sets" 
+                value={exercise.sets} 
+                onChange={(e) => handleExerciseChange(index, e)} 
+                placeholder="Sets" 
+                required 
+              />
+              <input 
+                className={form.input} 
+                type="text" 
+                name="reps" 
+                value={exercise.reps} 
+                onChange={(e) => handleExerciseChange(index, e)} 
+                placeholder="Reps" 
+                required 
+              />
+            </div>
           ))}
-        </select>
+          <button 
+            className={button.button}
+            type="button" 
+            onClick={addExercise} 
+            style={{ marginBottom: '10px', marginRight: '10px' }} // Adds space below and to the right
+          >
+            Add Another Exercise
+          </button>
+          <button 
+            className={button.button}
+            type="submit" 
+            style={{ marginBottom: '10px' }} // Adds space below the button
+          >
+            Save Workout Plan
+          </button>
+        </form>
+
+        {/* Dropdown filter for user-created workout plans */}
+        <div>
+          <h1 className={dropdown.title} style={{ display: 'inline', padding: '2px' }}>Your Workout Plans:</h1>
+          <select
+            className={dropdown.nav}
+            id="user-workout-plan-select"
+            value={selectedPlan}
+            onChange={handlePlanChange}
+            style={{ marginTop: '10px' }} // Adds space above the dropdown
+          >
+            <option value="">--Select a Plan--</option>
+            {userCreatedPlans.map((plan) => (
+              <option key={plan.id} value={plan.id}>
+                {plan.planName}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
-    </div>
     </>
   );
 }

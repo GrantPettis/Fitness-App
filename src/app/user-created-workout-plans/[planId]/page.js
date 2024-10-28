@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { db, auth } from '@/app/firebase/firebase'; // Import Firestore and auth
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 
 export default function UserCreatedWorkoutPlanPage({ params }) {
-  const { planId } = params; // Get the planId from the URL params
   const [workoutPlan, setWorkoutPlan] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -14,16 +13,14 @@ export default function UserCreatedWorkoutPlanPage({ params }) {
   useEffect(() => {
     const fetchWorkoutPlan = async () => {
       try {
-        // Check if the user is logged in
         const user = auth.currentUser;
-        if (user && planId) {
-          console.log(`Fetching workout plan for user: ${user.uid}, planId: ${planId}`); // Debugging log
+        const { planId } = await params;
 
+        if (user && planId) {
           const docRef = doc(db, 'users', user.uid, 'createdWorkoutPlans', planId);
           const docSnap = await getDoc(docRef);
 
           if (docSnap.exists()) {
-            console.log("Workout plan data: ", docSnap.data()); // Debugging log
             setWorkoutPlan(docSnap.data());
           } else {
             console.error("No such document found in Firestore!");
@@ -39,7 +36,27 @@ export default function UserCreatedWorkoutPlanPage({ params }) {
     };
 
     fetchWorkoutPlan();
-  }, [planId]);
+  }, [params]);
+
+  // Delete function
+  const handleDelete = async () => {
+    try {
+      const user = auth.currentUser;
+      const { planId } = await params;
+
+      if (user && planId) {
+        const docRef = doc(db, 'users', user.uid, 'createdWorkoutPlans', planId);
+        await deleteDoc(docRef);
+        alert("Workout plan deleted successfully!");
+
+        // Redirect to the create workout plan page after deletion
+        router.push('/create-workout-plan');
+      }
+    } catch (error) {
+      console.error("Error deleting workout plan:", error);
+      alert("Failed to delete the workout plan.");
+    }
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -62,6 +79,9 @@ export default function UserCreatedWorkoutPlanPage({ params }) {
           </li>
         ))}
       </ul>
+      <button onClick={handleDelete} style={{ marginTop: '20px', color: 'red' }}>
+        Delete Workout Plan
+      </button>
     </div>
   );
 }

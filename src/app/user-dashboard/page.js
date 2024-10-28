@@ -93,11 +93,11 @@ export default function UserDashboard() {
           <option key={plan.id} value={plan.id}>{plan.planName}</option>
         ))}
       </select>
-        <div>
-      <button className={button.button} onClick={() => handleNavigation('/exercises')}>Exercises</button>
-      <button className={button.button} onClick={() => handleNavigation('/workout-plans')}>Workout Plans</button>
-      <button className={button.button} onClick={() => handleNavigation('/progress-tracking')}>Track Your Progress</button>
-      </div>
+
+      <h2>Filter Menu</h2>
+      <button className={button.button}  onClick={() => handleNavigation('/exercises')}>Exercises</button>
+      <button  className={button.button} onClick={() => handleNavigation('/workout-plans')}>Workout Plans</button>
+      <button  className={button.button} onClick={() => handleNavigation('/progress-tracking')}>Track Your Progress</button>
     </div>
     </>
   );
