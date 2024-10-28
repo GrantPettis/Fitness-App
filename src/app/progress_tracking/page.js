@@ -5,6 +5,9 @@ import { getAuth } from 'firebase/auth';
 import { db } from '../firebase/firebase';  // Import `db` from your firebase config
 import { collection, addDoc, getDocs, query, where, orderBy, doc, deleteDoc, updateDoc } from 'firebase/firestore';  // Import Firestore functions
 import { useRouter } from 'next/navigation';  // Import useRouter
+import style from '@/app/components/exercise-item.module.css'
+import dropdown from '@/app/components/dropdown-menu.module.css'
+import button from '@/app/components/workout-plan-button.module.css'
 
 const LogProgress = () => {
   const [exercise, setExercise] = useState('');  // New state for exercise
@@ -140,21 +143,26 @@ const LogProgress = () => {
   };
 
   return (
+    <>
+     <header className={style.headerText} style={{ textAlign: 'center' }}>
+            <h1>Track Your Progress</h1>
+        </header>
     <div>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Exercise:</label>
+          <label className={dropdown.title}>Exercise:</label>
           <input
+            className={dropdown.nav}
             type="text"
             value={exercise}
             onChange={(e) => setExercise(e.target.value)}
-            placeholder="Enter exercise (e.g., Bench Press)"
+            placeholder="Enter exercise"
           />
         </div>
 
         <div>
-          <label>Category:</label>
-          <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <label className={dropdown.title}>Category:</label>
+          <select className={dropdown.nav} value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="Weightlifting">Weightlifting</option>
             <option value="Running">Running</option>
             <option value="Swimming">Swimming</option>
@@ -162,8 +170,8 @@ const LogProgress = () => {
         </div>
 
         <div>
-          <label>Value Type:</label>
-          <select value={valueType} onChange={(e) => setValueType(e.target.value)}>
+          <label className={dropdown.title}>Value Type:</label>
+          <select className={dropdown.nav} value={valueType} onChange={(e) => setValueType(e.target.value)}>
             <option value="Weight">Weight</option>
             <option value="Distance">Distance</option>
             <option value="Time">Time</option>
@@ -171,8 +179,9 @@ const LogProgress = () => {
         </div>
 
         <div>
-          <label>{valueType}:</label>
+          <label className={dropdown.title}>{valueType}:</label>
           <input
+          className={dropdown.nav}
             type="number"
             value={value}
             onChange={(e) => setValue(e.target.value)}
@@ -183,8 +192,8 @@ const LogProgress = () => {
         {/* Unit selector for weight */}
         {valueType === 'Weight' && (
           <div>
-            <label>Unit:</label>
-            <select value={unit} onChange={(e) => setUnit(e.target.value)}>
+            <label className={dropdown.title}>Unit:</label>
+            <select className={dropdown.nav} value={unit} onChange={(e) => setUnit(e.target.value)}>
               <option value="lbs">lbs</option>
               <option value="kg">kg</option>
             </select>
@@ -194,8 +203,8 @@ const LogProgress = () => {
         {/* Distance Unit selector for running/swimming */}
         {valueType === 'Distance' && (category === 'Running' || category === 'Swimming') && (
           <div>
-            <label>Distance Unit:</label>
-            <select value={distanceUnit} onChange={(e) => setDistanceUnit(e.target.value)}>
+            <label className={dropdown.title}>Distance Unit:</label>
+            <select className={dropdown.nav} value={distanceUnit} onChange={(e) => setDistanceUnit(e.target.value)}>
               <option value="miles">Miles</option>
               <option value="kilometers">Kilometers</option>
             </select>
@@ -205,8 +214,9 @@ const LogProgress = () => {
         {valueType === 'Weight' && (
           <>
             <div>
-              <label>Sets:</label>
+              <label className={dropdown.title}>Sets:</label>
               <input
+                className={dropdown.nav}
                 type="number"
                 value={sets}
                 onChange={(e) => setSets(e.target.value)}
@@ -215,8 +225,9 @@ const LogProgress = () => {
             </div>
 
             <div>
-              <label>Reps:</label>
+              <label className={dropdown.title}>Reps:</label>
               <input
+                className={dropdown.nav}
                 type="number"
                 value={reps}
                 onChange={(e) => setReps(e.target.value)}
@@ -227,8 +238,9 @@ const LogProgress = () => {
         )}
 
         <div>
-          <label>Goal {valueType}:</label>
+          <label className={dropdown.title}>Goal {valueType}:</label>
           <input
+            className={dropdown.nav}
             type="number"
             value={goalValue}
             onChange={(e) => setGoalValue(e.target.value)}
@@ -239,8 +251,8 @@ const LogProgress = () => {
         {/* Goal Distance Unit selector for running/swimming */}
         {valueType === 'Distance' && (category === 'Running' || category === 'Swimming') && (
           <div>
-            <label>Goal Distance Unit:</label>
-            <select value={goalDistanceUnit} onChange={(e) => setGoalDistanceUnit(e.target.value)}>
+            <label className={dropdown.title}>Goal Distance Unit:</label>
+            <select className={dropdown.nav} value={goalDistanceUnit} onChange={(e) => setGoalDistanceUnit(e.target.value)}>
               <option value="miles">Miles</option>
               <option value="kilometers">Kilometers</option>
             </select>
@@ -250,8 +262,9 @@ const LogProgress = () => {
         {valueType === 'Weight' && (
           <>
             <div>
-              <label>Goal Sets:</label>
+              <label className={dropdown.title}>Goal Sets:</label>
               <input
+                className={dropdown.nav}
                 type="number"
                 value={goalSets}
                 onChange={(e) => setGoalSets(e.target.value)}
@@ -260,8 +273,9 @@ const LogProgress = () => {
             </div>
 
             <div>
-              <label>Goal Reps:</label>
+              <label className={dropdown.title}>Goal Reps:</label>
               <input
+                className={dropdown.nav}
                 type="number"
                 value={goalReps}
                 onChange={(e) => setGoalReps(e.target.value)}
@@ -272,8 +286,9 @@ const LogProgress = () => {
         )}
 
         <div>
-          <label>Goal Body Weight (optional):</label>
+          <label className={dropdown.title}>Goal Body Weight (optional):</label>
           <input
+            className={dropdown.nav}
             type="number"
             value={goalWeight}
             onChange={(e) => setGoalWeight(e.target.value)}
@@ -281,13 +296,13 @@ const LogProgress = () => {
           />
         </div>
 
-        <button type="submit">{editId ? "Update Progress" : "Submit Progress"}</button>
+        <button className={button.button} type="submit">{editId ? "Update Progress" : "Submit Progress"}</button>
       </form>
       {message && <p>{message}</p>}
 
       <div>
-        <label>Filter by Category:</label>
-        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+        <label className={dropdown.title}>Filter by Category:</label>
+        <select className={dropdown.nav} value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
           <option value="All">All</option>
           <option value="Weightlifting">Weightlifting</option>
           <option value="Running">Running</option>
@@ -296,16 +311,17 @@ const LogProgress = () => {
       </div>
 
       <div>
-        <label>Filter by Date:</label>
-        <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
+        <label className={dropdown.title}>Filter by Date:</label>
+        <select className={dropdown.nav} value={dateFilter} onChange={(e) => setDateFilter(e.target.value)}>
           <option value="All">All Time</option>
           <option value="Last Week">Last Week</option>
           <option value="Last Month">Last Month</option>
         </select>
       </div>
 
-      <button onClick={handleFilterSubmit}>Submit Filter</button> {/* Submit Filter Button */}
+      <button className={button.button} onClick={handleFilterSubmit}>Submit Filter</button> {/* Submit Filter Button */}
     </div>
+    </>
   );
 };
 

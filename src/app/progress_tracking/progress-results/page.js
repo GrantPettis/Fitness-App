@@ -5,6 +5,9 @@ import { useSearchParams } from 'next/navigation'; // Import to handle query par
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase/firebase'; // Import Firebase config
 import { collection, getDocs, query, where, orderBy } from 'firebase/firestore'; // Import Firestore functions
+import style from '@/app/components/exercise-item.module.css'
+import dropdown from '@/app/components/dropdown-menu.module.css'
+import grid from '@/app/components/exercise-grid.module.css'
 
 const ProgressResults = () => {
   const [progressData, setProgressData] = useState([]);
@@ -55,27 +58,31 @@ const ProgressResults = () => {
   }, [currentUser, category, date]); // Re-fetch the data when category or date filter changes
 
   return (
+    <>
+    <header className={style.headerText} style={{ textAlign: 'center' }}>
+        <h1>Your Results</h1>
+      </header>
     <div>
-      <h2>Filtered Progress Results</h2>
       {progressData.length > 0 ? (
         progressData.map((entry, index) => (
           <div key={index}>
-            <p>Exercise: {entry.exercise}</p>
-            <p>Category: {entry.category}</p>
-            <p>{entry.valueType}: {entry.value} {entry.unit}</p>
-            {entry.sets && <p>Sets: {entry.sets}</p>}
-            {entry.reps && <p>Reps: {entry.reps}</p>}
-            <p>Goal {entry.valueType}: {entry.goalValue} {entry.unit}</p>
-            {entry.goalSets && <p>Goal Sets: {entry.goalSets}</p>}
-            {entry.goalReps && <p>Goal Reps: {entry.goalReps}</p>}
-            {entry.goalWeight && <p>Goal Body Weight: {entry.goalWeight} {entry.unit}</p>}
-            <p>Date: {new Date(entry.date.seconds * 1000).toLocaleDateString()}</p>
+            <p className={dropdown.title}> <b>Exercise: </b> {entry.exercise}</p>
+            <p className={dropdown.title}> <b>Category: </b> {entry.category}</p>
+            <p className={dropdown.title}> <b>{entry.valueType}:</b> {entry.value} {entry.unit}</p>
+            {entry.sets && <p  className={dropdown.title}><b>Sets: </b>  {entry.sets}</p>}
+            {entry.reps && <p  className={dropdown.title}> <b>Reps: </b>  {entry.reps}</p>}
+            <p  className={dropdown.title}> <b>Goal {entry.valueType}: </b>  {entry.goalValue} {entry.unit}</p>
+            {entry.goalSets && <p  className={dropdown.title}> <b>Goal Sets: </b>  {entry.goalSets}</p>}
+            {entry.goalReps && <p  className={dropdown.title}> <b>Goal Reps: </b>  {entry.goalReps}</p>}
+            {entry.goalWeight && <p  className={dropdown.title}> <b>Goal Body Weight: </b>  {entry.goalWeight} {entry.unit}</p>}
+            <p  className={dropdown.title}> <b> Date: </b>  {new Date(entry.date.seconds * 1000).toLocaleDateString()}</p>
           </div>
         ))
       ) : (
         <p>No progress found for the selected filters.</p>
       )}
     </div>
+    </>
   );
 };
 

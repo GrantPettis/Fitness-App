@@ -74,7 +74,7 @@ export default function Header() {
             </li>
             {user ? (
               <li>
-                <button onClick={handleSignOut} className={classes.signOutButton}>
+                <button onClick={handleSignOut}>
                   Sign Out
                 </button>
               </li>

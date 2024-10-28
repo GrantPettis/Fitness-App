@@ -5,6 +5,9 @@ import { auth, db } from '../firebase/firebase'; // Import Firestore instance
 import { collection, getDocs } from 'firebase/firestore'; // Firestore methods
 import { useRouter } from 'next/navigation';
 import Link from 'next/link'; // Import Next.js Link for navigation
+import style from '@/app/components/exercise-item.module.css'
+import dropdown from '@/app/components/dropdown-menu.module.css'
+import button from '@/app/components/workout-plan-button.module.css'
 
 export default function UserDashboard() {
   const [user, setUser] = useState(null);
@@ -71,10 +74,11 @@ export default function UserDashboard() {
   };
 
   return (
+    <>
+       <header className={style.headerText} style={{ textAlign: 'center' }}>
+        <h1>Welcome, {firstName}!</h1>
+      </header>
     <div>
-      <h1>User Dashboard</h1>
-      <p>Welcome, {firstName}!</p> {/* Display the first name only */}
-
       {isAdmin && (
         <div>
           <p>You are an Admin.</p>
@@ -82,18 +86,19 @@ export default function UserDashboard() {
         </div>
       )}
 
-      <h2>Your Assigned Workout Plans</h2>
-      <select onChange={handlePlanChange} defaultValue="">
+     <h1 className={dropdown.title} style={{ display: 'inline', padding: '2px' }}>Your Assigned Workout Plans:</h1>
+      <select className={dropdown.nav} onChange={handlePlanChange} defaultValue="">
         <option value="">Select a workout plan</option>
         {workoutPlans.map(plan => (
           <option key={plan.id} value={plan.id}>{plan.planName}</option>
         ))}
       </select>
-
-      <h2>Filter Menu</h2>
-      <button onClick={() => handleNavigation('/exercises')}>Exercises</button>
-      <button onClick={() => handleNavigation('/workout-plans')}>Workout Plans</button>
-      <button onClick={() => handleNavigation('/progress-tracking')}>Track Your Progress</button>
+        <div>
+      <button className={button.button} onClick={() => handleNavigation('/exercises')}>Exercises</button>
+      <button className={button.button} onClick={() => handleNavigation('/workout-plans')}>Workout Plans</button>
+      <button className={button.button} onClick={() => handleNavigation('/progress-tracking')}>Track Your Progress</button>
+      </div>
     </div>
+    </>
   );
 }
