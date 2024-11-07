@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase/firebase'; 
 import { useRouter } from 'next/navigation';
+import style from '@/app/components/exercise-item.module.css'
+import button from '@/app/components/workout-plan-button.module.css'
+import dropdown from '@/app/components/dropdown-menu.module.css'
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -128,23 +131,26 @@ export default function AdminDashboard() {
   const firstName = user.email.split('@')[0].charAt(0).toUpperCase() + user.email.split('@')[0].slice(1);
 
   return (
+    <>
+    <header className={style.headerText} style={{ textAlign: 'center' }}>
+        <h1>Welcome {firstName}!</h1>
+    </header>
+    {/* Display the first name only */}
     <div>
-      <h1>Admin Dashboard</h1>
-      <p>Welcome, {firstName}!</p> {/* Display the first name only */}
-      <p>Total Users: {users.length}</p> {/* Display total users */}
+      <p className={dropdown.title}>Total Users: {users.length}</p> {/* Display total users */}
 
       {/* Button to navigate to the users list */}
-      <button onClick={() => router.push('/admin-dashboard/users/usersList')}>
+      <button className={button.button} onClick={() => router.push('/admin-dashboard/users/usersList')}>
         View Users
       </button>
 
       {feedback && <p>{feedback}</p>} 
 
       {/* Assign Workout Plans */}
-      <h2>Assign Workout Plans</h2>
+      <h2 className={dropdown.title}> <u>Assign Workout Plans</u></h2>
       <div>
-        <label>Select User:</label>
-        <select value={selectedUser} onChange={(e) => setSelectedUser(e.target.value)}>
+        <label className={dropdown.title}>Select User:</label>
+        <select className= {dropdown.nav} value={selectedUser} onChange={(e) => setSelectedUser(e.target.value)}>
           <option value="">Select a user</option>
           {users.map((user) => (
             <option key={user.id} value={user.id}>{user.email}</option>
@@ -153,8 +159,8 @@ export default function AdminDashboard() {
       </div>
 
       <div>
-        <label>Select Workout Plan:</label>
-        <select value={selectedPlan} onChange={(e) => setSelectedPlan(e.target.value)}>
+        <label className={dropdown.title}>Select Workout Plan:</label>
+        <select  className= {dropdown.nav} value={selectedPlan} onChange={(e) => setSelectedPlan(e.target.value)}>
           <option value="">Select a plan</option>
           {workoutPlans.map((plan) => (
             <option key={plan.id} value={plan.id}>{plan.name}</option>
@@ -162,7 +168,8 @@ export default function AdminDashboard() {
         </select>
       </div>
 
-      <button onClick={assignWorkoutPlan}>Assign Plan</button>
+      <button className={button.button} onClick={assignWorkoutPlan}>Assign Plan</button>
     </div>
+    </>
   );
 }
