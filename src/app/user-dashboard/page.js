@@ -1,104 +1,112 @@
-"use client"; // This should be the first line in your file
+"use client";
 
 import { useEffect, useState } from 'react';
-import { auth, db } from '../firebase/firebase'; // Import Firestore instance
-import { collection, getDocs } from 'firebase/firestore'; // Firestore methods
+import { auth, db } from '../firebase/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link'; // Import Next.js Link for navigation
-import style from '@/app/components/exercise-item.module.css'
-import dropdown from '@/app/components/dropdown-menu.module.css'
-import button from '@/app/components/workout-plan-button.module.css'
+import style from '@/app/components/exercise-item.module.css';
+import dropdown from '@/app/components/dropdown-menu.module.css';
+import button from '@/app/components/workout-plan-button.module.css';
 
 export default function UserDashboard() {
   const [user, setUser] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false); // State to check if user is admin
-  const [workoutPlans, setWorkoutPlans] = useState([]); // State for storing user's workout plans
-  const [loadingPlans, setLoadingPlans] = useState(true); // Loading state for workout plans
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [workoutPlans, setWorkoutPlans] = useState([]);
+  const [loadingPlans, setLoadingPlans] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        setUser(user); // User is signed in
-        const token = await user.getIdTokenResult(); // Get the token to check claims
-        setIsAdmin(token.claims.isAdmin || false); // Set admin status based on claims
-        fetchWorkoutPlans(user.uid); // Fetch workout plans for the logged-in user
+        setUser(user);
+        const token = await user.getIdTokenResult();
+        setIsAdmin(token.claims.isAdmin || false);
+        fetchWorkoutPlans(user.uid);
       } else {
-        router.push('/'); // Redirect to home if no user
+        router.push('/');
       }
     });
 
-    return () => unsubscribe(); // Cleanup on unmount
+    return () => unsubscribe();
   }, [router]);
 
-  // Fetch the workout plans assigned to the logged-in user
   const fetchWorkoutPlans = async (userId) => {
     try {
-      const workoutPlansRef = collection(db, 'users', userId, 'workoutPlans'); // Reference to user's workout plans
+      const workoutPlansRef = collection(db, 'users', userId, 'workoutPlans');
       const querySnapshot = await getDocs(workoutPlansRef);
-      const plansData = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        planName: doc.data().planName || "Unnamed Plan" // Use planName or default to "Unnamed Plan"
-      }));
+      const plansData = querySnapshot.docs.map(doc => {
+        console.log("Fetched workout plan data:", doc.data());
+        return {
+          id: doc.id,  // Use document ID as the plan ID
+          planName: doc.data().planName || doc.data().slug || "Unnamed Plan",
+          slug: doc.data().slug
+        };
+      });
 
-      setWorkoutPlans(plansData); // Set workout plans in state
-      setLoadingPlans(false); // Set loading to false once fetched
+      setWorkoutPlans(plansData);
+      setLoadingPlans(false);
     } catch (error) {
       console.error("Error fetching workout plans:", error);
-      setLoadingPlans(false); // Stop loading if there's an error
+      setLoadingPlans(false);
     }
   };
 
   const handlePlanChange = (e) => {
-    const selectedId = e.target.value;
-    if (selectedId) {
-      router.push(`/workout-plans/${selectedId}`); // Redirect to the selected workout plan details page
+    const selectedSlug = e.target.value;
+    if (selectedSlug) {
+      router.push(`/workout_plan/${selectedSlug}`); // Navigate using the slug
     }
   };
 
   if (!user) {
-    return <p>Loading...</p>; // Display loading text for authentication
+    return <p>Loading...</p>;
   }
 
   if (loadingPlans) {
-    return <p>Loading workout plans...</p>; // Display loading text for workout plans
+    return <p>Loading workout plans...</p>;
   }
 
-  // Extract the first name from the email
   const firstName = user.email.split('@')[0].charAt(0).toUpperCase() + user.email.split('@')[0].slice(1);
 
-  // Function to handle navigation
   const handleNavigation = (path) => {
     router.push(path); 
   };
 
   return (
     <>
-       <header className={style.headerText} style={{ textAlign: 'center' }}>
+      <header className={style.headerText} style={{ textAlign: 'center' }}>
         <h1>Welcome, {firstName}!</h1>
       </header>
-    <div>
-      {isAdmin && (
-        <div>
-          <p>You are an Admin.</p>
-          <button onClick={() => handleNavigation('/admin-dashboard')}>Go to Admin Dashboard</button> {/* Link to Admin Dashboard */}
-        </div>
-      )}
+      <div>
+        {isAdmin && (
+          <div>
+            <p>You are an Admin.</p>
+            <button onClick={() => handleNavigation('/admin-dashboard')}>Go to Admin Dashboard</button>
+          </div>
+        )}
 
-     <h1 className={dropdown.title} style={{ display: 'inline', padding: '2px' }}>Your Assigned Workout Plans:</h1>
-      <select className={dropdown.nav} onChange={handlePlanChange} defaultValue="">
-        <option value="">Select a workout plan</option>
-        {workoutPlans.map(plan => (
-          <option key={plan.id} value={plan.id}>{plan.planName}</option>
-        ))}
-      </select>
+        <h1 className={dropdown.title} style={{ display: 'inline', padding: '2px' }}>Your Assigned Workout Plans:</h1>
+        <select className={dropdown.nav} onChange={handlePlanChange} defaultValue="">
+          <option value="">Select a workout plan</option>
+          {workoutPlans.map(plan => (
+            <option key={plan.id} value={plan.slug}>{plan.planName}</option>
+          ))}
+        </select>
 
-      <h2>Filter Menu</h2>
-      <button className={button.button}  onClick={() => handleNavigation('/exercises')}>Exercises</button>
-      <button  className={button.button} onClick={() => handleNavigation('/workout-plans')}>Workout Plans</button>
-      <button  className={button.button} onClick={() => handleNavigation('/progress-tracking')}>Track Your Progress</button>
-    </div>
+        <h2>Filter Menu</h2>
+        <button className={button.button} onClick={() => handleNavigation('/exercises')}>Exercises</button>
+        <button className={button.button} onClick={() => handleNavigation('/workout_plan')}>Workout Plans</button>
+        <button className={button.button} onClick={() => handleNavigation('/progress_tracking')}>Track Your Progress</button>
+
+        {/* Send Private Message Button */}
+        <button
+          className={button.button}
+          style={{ marginTop: '20px' }}
+          onClick={() => window.location.href = 'mailto:manager@example.com?subject=Private%20Message&body=Hello, I have a question...'}
+        >
+          Send Private Message
+        </button>
+      </div>
     </>
   );
 }

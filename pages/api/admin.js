@@ -6,13 +6,10 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { uid, role, userId, planId } = req.body;
 
-    console.log("Received POST request:", { uid, role, userId, planId });
-
     try {
-      const adminAuth = getAuth();  // Use Firebase Admin SDK for auth
+      const adminAuth = getAuth();
       const userRecord = await adminAuth.getUser(uid);
 
-      // Verify admin status
       if (!userRecord.customClaims || userRecord.customClaims.admin !== true) {
         return res.status(403).json({ error: 'Not authorized. Only admins can perform this action.' });
       }
@@ -21,51 +18,31 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Failed to verify admin status.' });
     }
 
-    // Handle role updates
-    if (role) {
-      if (!uid || !role) {
-        return res.status(400).json({ error: "uid and role are required." });
-      }
-
-      try {
-        const userDoc = db.collection('users').doc(uid);  // Correct Admin SDK usage
-        await userDoc.update({ role });  // Use `update` instead of `updateDoc`
-        console.log(`User ${uid} updated to role ${role}.`);
-        return res.status(200).json({ message: `User ${uid} updated to role ${role}.` });
-      } catch (error) {
-        console.error("Error updating user role:", error);
-        return res.status(500).json({ error: "Failed to update user role." });
-      }
-    }
-
-    // Handle workout plan assignment
     if (userId && planId) {
       try {
-        const userWorkoutPlanRef = db.collection('users').doc(userId).collection('workoutPlans').doc(planId);  // Reference to user's workout plan
-        const workoutPlanRef = db.collection('workoutPlans').doc(planId);  // Reference to the workout plan
+        const userWorkoutPlanRef = db.collection('users').doc(userId).collection('workoutPlans').doc(planId);
+        const workoutPlanRef = db.collection('workoutPlans').doc(planId);
 
         const workoutPlanSnapshot = await workoutPlanRef.get();
-        if (!workoutPlanSnapshot.exists) {  // Check if the workout plan exists
+        if (!workoutPlanSnapshot.exists) {
           return res.status(404).json({ error: "Workout plan not found." });
         }
 
-        // Ensure 'name' field is used
         const workoutData = workoutPlanSnapshot.data();
 
-        const existingPlan = await userWorkoutPlanRef.get();
-        if (existingPlan.exists) {  // Check if the workout plan is already assigned
-          return res.status(400).json({ error: "Workout plan already assigned to this user." });
-        }
+        // Check if `name` or `planName` exists; fallback to a readable slug if both are missing.
+        const planName = workoutData.name || workoutData.planName || formatSlugToName(workoutData.slug);
+        const slug = workoutData.slug || planId;
 
-        // Assign workout plan
         await userWorkoutPlanRef.set({
           ...workoutData,
-          assignedAt: new Date(), // Store the date and time of assignment
-          assignedBy: uid, // Store the admin UID
-          planName: workoutData.name || "Unnamed Plan", // Use the 'name' field from the workout plan
+          assignedAt: new Date(),
+          assignedBy: uid,
+          planName: planName,
+          slug: slug,
         });
 
-        console.log(`Workout plan ${planId} assigned to user ${userId}.`);
+        console.log(`Workout plan ${planId} assigned to user ${userId}. Plan name: ${planName}, Slug: ${slug}`);
         return res.status(200).json({ message: `Workout plan ${planId} assigned to user ${userId}.` });
       } catch (error) {
         console.error("Error assigning workout plan:", error);
@@ -76,7 +53,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Invalid request. Provide either uid and role, or userId and planId." });
   } else if (req.method === 'GET') {
     try {
-      const usersCollection = db.collection('users');  // Correct Admin SDK usage
+      const usersCollection = db.collection('users');
       const snapshot = await usersCollection.get();
       const users = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -91,4 +68,11 @@ export default async function handler(req, res) {
     res.setHeader('Allow', ['GET', 'POST']);
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
+}
+
+// Helper function to format slug into readable name
+function formatSlugToName(slug) {
+  return slug
+    .replace(/-/g, ' ')        // Replace hyphens with spaces
+    .replace(/\b\w/g, char => char.toUpperCase()); // Capitalize each word
 }
