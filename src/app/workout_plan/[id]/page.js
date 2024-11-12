@@ -1,15 +1,21 @@
-// src/app/workout_plan/[id]/page.js
-
+"use client";
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../../firebase/firebase'; // Adjust the path if necessary
+import { db } from '../../firebase/firebase'; // Adjust the path if necessary
 
 export default function WorkoutPlanDetail() {
   const router = useRouter();
-  const { id } = router.query; // Get the plan ID from the URL
   const [workoutPlan, setWorkoutPlan] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [id, setId] = useState(null); // Local state for ID
+
+  useEffect(() => {
+    // Check if router.query is ready and set ID
+    if (router.query?.id) {
+      setId(router.query.id);
+    }
+  }, [router.query]);
 
   useEffect(() => {
     if (id) {
