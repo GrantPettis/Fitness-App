@@ -93,10 +93,11 @@ export default function UserDashboard() {
           ))}
         </select>
 
-        <h2>Filter Menu</h2>
+        <div style={{padding: '5px'}}>
         <button className={button.button} onClick={() => handleNavigation('/exercises')}>Exercises</button>
         <button className={button.button} onClick={() => handleNavigation('/workout_plan')}>Workout Plans</button>
         <button className={button.button} onClick={() => handleNavigation('/progress_tracking')}>Track Your Progress</button>
+       
 
         {/* Send Private Message Button */}
         <button
@@ -106,6 +107,7 @@ export default function UserDashboard() {
         >
           Send Private Message
         </button>
+        </div>
       </div>
     </>
   );
