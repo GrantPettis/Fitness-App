@@ -160,5 +160,8 @@ For future teams who need to modify or expand admin functionalities, here are ke
   
 - **Security Rules**: If you’re adding or updating sensitive admin actions, review and update Firebase **Firestore Security Rules** to ensure only admins have access to these functions.
 
+> **Note:** The "Assigned Workout Plan" feature is currently under development. When users click on an assigned workout plan in the userdashboard, they may encounter a placeholder message indicating that the functionality is not yet complete. This feature will be implemented in a future update to enhance user experience and provide a seamless interaction with assigned workout plans.
+
+
 #### **Documentation for Firebase Schema**
 - **Database Schema**: Provide a comprehensive schema of the Firebase database, with descriptions of each collection and field. This documentation will help future developers understand data organization and ease troubleshooting.
