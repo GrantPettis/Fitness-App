@@ -1,3 +1,5 @@
+/* This component aligns items in a grid. Used for Exercise list and Workout Plans */
+
 .exercises {
     width: 90%;
     max-width: 180rem;

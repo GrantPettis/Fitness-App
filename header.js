@@ -1,3 +1,5 @@
+/* header for the entire app. Essentially this is added onto every page.*/
+
 "use client";
 
 import { useEffect, useState } from 'react';
