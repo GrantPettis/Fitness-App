@@ -1,3 +1,4 @@
+/*Page for User to see the progress tracking results they have entered */
 "use client"; 
 
 import { useEffect, useState } from 'react';

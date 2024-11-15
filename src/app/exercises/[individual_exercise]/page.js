@@ -1,3 +1,4 @@
+/*Info on the exercise the user selected on the main exercise page */
 "use client"; 
 import { doc, getDoc } from 'firebase/firestore'; // Firestore functions
 import { db } from '@/app/firebase/firebase'; // Firestore instance

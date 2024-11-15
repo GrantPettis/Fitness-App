@@ -1,3 +1,4 @@
+/*Page for a user to input progress tracking */
 "use client"; // Ensure this is a client-side component
 
 import { useState, useEffect } from 'react';

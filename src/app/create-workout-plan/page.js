@@ -1,3 +1,4 @@
+/*Page for creating a workout plan saves to firebase and auto directs to user generated workout plan page when saved */
 "use client"; // Mark this as a Client Component
 
 import React, { useState, useEffect } from 'react';

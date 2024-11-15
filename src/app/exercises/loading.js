@@ -1,4 +1,4 @@
-/* loading screen for the exercise page. Can be applied to other oages*/
+/* loading screen for the exercise page. Can be applied to other pages*/
 
 import classes from '@/app/components/loading.module.css'
 export default function ExerciseLoading (){

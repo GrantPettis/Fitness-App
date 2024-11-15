@@ -1,3 +1,4 @@
+/*Main page of Exercises, has the exercise list and the ability to filter them*/
 "use client";
 import { Firestore, getDoc, collection, getDocs, QuerySnapshot } from 'firebase/firestore';
 import Link from 'next/link';

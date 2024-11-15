@@ -1,3 +1,4 @@
+/*Home Page first page user sees when they open the site*/ 
 "use client";  // Ensure the component is treated as a Client Component
 
 import Image from 'next/image';  // Import Next.js Image component
@@ -46,7 +47,7 @@ export default function Home() {
       <div className={styles.header}>
         {!loading && user && (
           <>
-            <p>Welcome, {user.displayName ? user.displayName : user.email}!</p>
+            <p className={styles.text}>Welcome, {user.displayName ? user.displayName : user.email}!</p>
             {isAdmin ? <p>You are on the Admin Dashboard.</p> : <p>You are on the User Dashboard.</p>}
           </>
         )}
@@ -55,7 +56,7 @@ export default function Home() {
       <main className={styles.main}>
         <ol>
           <Image className={styles.home} src={logoImg} alt='UBM logo' />
-          <p className={styles.page}>Change Your Life, One Step At A Time</p>
+          <p className={styles.text}>Change Your Life, One Step At A Time</p>
         </ol>
 
         <div className={styles.ctas}>

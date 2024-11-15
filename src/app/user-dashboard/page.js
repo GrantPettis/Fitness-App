@@ -1,3 +1,4 @@
+/*Main user dashboard. Meant to be built upon with subscription tools, payment, ect. */
 "use client";
 
 import { useEffect, useState } from 'react';

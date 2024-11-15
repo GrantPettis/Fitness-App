@@ -1,3 +1,4 @@
+/*Sign Up page */
 "use client";  // Ensure it's a Client Component
 
 import { useState } from 'react';

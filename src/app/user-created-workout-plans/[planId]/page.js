@@ -1,3 +1,4 @@
+/*Individual workout plan page for plans created by user */
 "use client"; // Mark as a Client Component
 
 import { useEffect, useState } from 'react';

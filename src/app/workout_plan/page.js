@@ -1,3 +1,4 @@
+/* Main workout Plan page */
 "use client"; // Mark this as a Client Component
 
 import React, { useState, useEffect } from 'react';

@@ -1,3 +1,4 @@
+/*main page for contacting the client */
 "use client";
 
 import Link from 'next/link';

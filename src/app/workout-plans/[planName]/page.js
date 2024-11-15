@@ -1,3 +1,4 @@
+/* pre generated plans pulled from Firebase */
 "use client"; // Mark this as a Client Component
 
 import { useParams } from 'next/navigation';

@@ -1,3 +1,4 @@
+/*page for user and admin sign in */
 "use client";  // Ensure it's a Client Component
 
 import { useState } from 'react';
