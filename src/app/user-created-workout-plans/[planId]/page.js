@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { db, auth } from '@/app/firebase/firebase'; // Import Firestore and auth
 import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
+import grid from '@/app/components/exercise-grid.module.css'
+import style from '@/app/components/exercise-item.module.css'
+import button from '@/app/components/workout-plan-button.module.css'
 
 export default function UserCreatedWorkoutPlanPage({ params }) {
   const [workoutPlan, setWorkoutPlan] = useState(null);
@@ -67,10 +70,12 @@ export default function UserCreatedWorkoutPlanPage({ params }) {
   }
 
   return (
+    <>
+        <header className={style.headerText} style={{ textAlign: 'center' }}>
+        <h1>{workoutPlan.planName}</h1>
+        </header>
     <div>
-      <h1>{workoutPlan.planName}</h1>
-      <h2>Exercises</h2>
-      <ul>
+      <ul className={grid.exercises}>
         {workoutPlan.exercises.map((exercise, index) => (
           <li key={index}>
             <strong>{exercise.name}</strong> <br />
@@ -79,9 +84,10 @@ export default function UserCreatedWorkoutPlanPage({ params }) {
           </li>
         ))}
       </ul>
-      <button onClick={handleDelete} style={{ marginTop: '20px', color: 'red' }}>
-        Delete Workout Plan
+      <button className={button.delete} onClick={handleDelete} style={{ display: 'block', margin: '20px auto', padding: '10px 20px' }}>
+        <b>Delete Workout Plan</b>
       </button>
     </div>
+    </>
   );
 }

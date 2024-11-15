@@ -62,7 +62,7 @@ const ProgressResults = () => {
     <header className={style.headerText} style={{ textAlign: 'center' }}>
         <h1>Your Results</h1>
       </header>
-    <div>
+    <div className={grid.exercises}>
       {progressData.length > 0 ? (
         progressData.map((entry, index) => (
           <div key={index}>

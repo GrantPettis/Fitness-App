@@ -110,7 +110,7 @@ export default function WorkoutPlanDetails() {
                 Reps: {exercise.reps} <br />
                 Primary Muscle: {exercise.primaryMuscle} <br />
                 Adaptation: {exercise.adaptation} <br />
-                <a href={exercise.videoURL} target="_blank" rel="noopener noreferrer">Watch Video</a>
+                <a href={exercise.videoURL} target="_blank" rel="noopener noreferrer"><u>Watch Video</u></a>
               </li>
             ))}
           </ul>

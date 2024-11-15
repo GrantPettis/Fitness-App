@@ -103,7 +103,7 @@ export default function ExerciseDetailPage({ params }) {
             </div>
             {exercise.videoURL ? (
                 <div className={classes.info}><a href={exercise.videoURL} target="_blank" rel="noopener noreferrer">
-                Click Here
+                <u>Click Here</u>
             </a>
             </div>
 
